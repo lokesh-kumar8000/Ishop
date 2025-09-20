@@ -27,16 +27,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/(website)/page.js"
     ],
-    "/(website)/store/layout": [
+    "/(website)/profile-view/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/(website)/store/layout.css",
-      "static/chunks/app/(website)/store/layout.js"
+      "static/chunks/app/(website)/profile-view/page.js"
     ],
-    "/(website)/store/page": [
+    "/_not-found/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(website)/store/page.js"
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }

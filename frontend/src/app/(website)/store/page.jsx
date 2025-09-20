@@ -7,8 +7,7 @@ async function page({ searchParams }) {
   const color = searchParams.color ?? null;
   const min = searchParams.min ?? null;
   const max = searchParams.max ?? null; 
-  console.log(color,'color');
-  console.log(brand,'1');
+
   const productJSON = await getProducts(null, null, brand, color,min,max); 
   const products = productJSON.data; 
   return (

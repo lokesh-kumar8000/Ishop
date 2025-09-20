@@ -1,5 +1,4 @@
 "use client";
-import { CiHeart } from "react-icons/ci";
 import { BsCart } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import { HiOutlineMenu, HiX } from "react-icons/hi";
@@ -14,6 +13,7 @@ export default function Header() {
   const dispatcher = useDispatch();
   const [menuOpen, setMenuOpen] = useState(false);
   const cart = useSelector((state) => state.cart);
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatcher(lstoCart());
@@ -91,12 +91,14 @@ export default function Header() {
 
           {/* Right side */}
           <div className="flex items-center space-x-3">
-            <div className="h-[40px] w-[40px]   bg-[#EBEEF6] rounded-full flex justify-center items-center text-[18px]">
-              <CiHeart />
-            </div>
             <div className="ml-2  hidden sm:block">
-              <p className="text-[11px] text-[#666666]">Welcome</p>
-              <p className="font-bold text-[14px]">Log in / Register</p>
+              {user ? (
+                <p className="font-bold text-[14px] uppercase "> hi {user?.data?.name} </p>
+              ) : (
+                <p className="font-bold text-[14px]">Log in / Register</p>
+              )}
+              {/* <p className="text-[11px] text-[#666666]">Welcome</p>
+              <p className="font-bold text-[14px]">Log in / Register</p> */}
             </div>
 
             <Link href="/cart">
@@ -142,7 +144,7 @@ export default function Header() {
               <Link href="/store">
                 <li className="cursor-pointer hover:text-green-600">Store</li>
               </Link>
-               <Link href="/contact">
+              <Link href="/contact">
                 <li className="cursor-pointer hover:text-green-600">
                   Contacts
                 </li>

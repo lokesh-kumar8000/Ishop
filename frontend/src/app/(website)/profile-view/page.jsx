@@ -1,9 +1,27 @@
 "use client";
-import React, { useState } from "react";
+import { axioIsnstance, notify } from "@/library/helper";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 export default function AccountInfoPage() {
+  const user = useSelector((state) => state?.user?.data);
   const [toggle, setToggle] = useState("account");
+  const [showFrom, setShowFrom] = useState(false);
+  const router = useRouter();
+  const [users, setUser] = useState([]);
+
+  useEffect(() => {
+    axioIsnstance
+      .get(`user/get/${user?._id}`)
+      .then((response) => {
+        setUser(response.data.data.shipping_address);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [user?._id]);
 
   function Button({ text, tab }) {
     return (
@@ -17,8 +35,56 @@ export default function AccountInfoPage() {
           }`}
       >
         {text} <FaArrowRight className="ml-2" />
-      </button> 
+      </button>
     );
+  }
+  // address submit
+  
+  function addressSubmit(e) { 
+    e.preventDefault();
+    if (users.length >= 3) {
+      notify("You can add only 3 addresses.", false);  
+      setShowFrom(!showFrom);
+    } else {
+      if (user?._id) {
+        axioIsnstance
+          .put(`user/address/${user?._id}`, {
+            addressLine1: e.target.addressLine1.value,
+            addressLine2: e.target.addressLine2.value,
+            city: e.target.city.value,
+            contact: e.target.contact.value,
+            state: e.target.state.value,
+            country: e.target.country.value,
+          })
+          .then((response) => {
+            const newAddress = response.data.data.shipping_address; 
+            setUser((prew) => [...prew, newAddress]);
+            notify(response.data.message, response.data.success);
+            setShowFrom(!showFrom);
+          })
+          .catch((err) => {
+            console.log(err);
+            notify("User not found", false);
+            router.push("/user-login");
+          });
+      } 
+    }
+  }
+  // delete address
+  function deleteAddress(index) {
+    axioIsnstance
+      .delete(`user/delete/${user?._id}/${index}`)
+      .then((response) => {
+        notify(response.data.message, response.data.success);
+        setUser((prew) => {
+          const updated = [...prew];
+          updated.splice(index, 1);
+          return updated;
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   return (
@@ -44,6 +110,7 @@ export default function AccountInfoPage() {
 
         {/* Main Content */}
         <div className="w-full md:w-3/4 p-4 sm:p-8">
+          {/* my account  */}
           {toggle === "account" && (
             <div>
               <h1 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
@@ -61,7 +128,7 @@ export default function AccountInfoPage() {
                     defaultValue="Mark"
                     className="border rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-teal-500"
                   />
-                </div> 
+                </div>
 
                 <div className="flex flex-col">
                   <label className="text-sm font-medium mb-1">
@@ -111,7 +178,7 @@ export default function AccountInfoPage() {
               </form>
             </div>
           )}
-
+          {/* my order */}
           {toggle === "order" && (
             <div>
               <h1 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
@@ -156,55 +223,173 @@ export default function AccountInfoPage() {
               </div>
             </div>
           )}
-
+          {/* my address  */}
           {toggle === "address" && (
-            <div>
-              <h1 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
-                My Address
-              </h1>
-              <div className="flex flex-col gap-4 sm:gap-6">
-                {[
-                  {
-                    title: "Home",
-                    address:
-                      "123, Green Park Colony, New Delhi, India - 110016",
-                    phone: "+91 98765 43210",
-                  },
-                  {
-                    title: "Office",
-                    address:
-                      "45, Tech Park Building, Bangalore, India - 560100",
-                    phone: "+91 99887 77665",
-                  },
-                ].map((item, i) => (
-                  <div
-                    key={i}
-                    className="border rounded-xl p-4 sm:p-6 shadow-sm text-sm sm:text-base"
-                  >
-                    <h2 className="font-semibold text-base sm:text-lg">
-                      {item.title}
-                    </h2>
-                    <p className="text-gray-600 mt-2">{item.address}</p>
-                    <p className="text-gray-500 text-xs sm:text-sm">
-                      Phone: {item.phone}
-                    </p>
-                    <div className="mt-3 sm:mt-4 flex gap-2 sm:gap-3">
-                      <button className="text-xs sm:text-sm bg-teal-600 text-white px-3 sm:px-4 py-1 rounded-lg">
-                        Edit
-                      </button>
-                      <button className="text-xs sm:text-sm bg-red-500 text-white px-3 sm:px-4 py-1 rounded-lg">
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                ))}
-                <button className="mt-3 sm:mt-4 bg-teal-600 hover:bg-teal-700 text-white px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base self-start">
-                  + Add New Address
+            <section className="  p-6 bg-white rounded-2xl shadow-sm relative ">
+              <div className=" flex justify-end ">
+                <button
+                  onClick={() => setShowFrom(!showFrom)}
+                  className="rounded-md px-4 py-2 cursor-pointer  font-medium bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                >
+                  {showFrom ? "Close From" : "Add Address"}
                 </button>
               </div>
-            </div>
-          )}
+              {showFrom ? (
+                <form
+                  onSubmit={addressSubmit}
+                  className="space-y-6 bg-white w-full "
+                  aria-label="Address form"
+                >
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div className="md:col-span-2">
+                      <label className="block  font-medium ">
+                        Address Line 1 <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        name="addressLine1"
+                        placeholder="House number, building, street"
+                        required
+                        className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                      />
+                      <p className="mt-1 text-xs text-gray-400">
+                        This field is required.
+                      </p>
+                    </div>
 
+                    <div className="md:col-span-2">
+                      <label className="block  font-medium ">
+                        Address Line 2
+                      </label>
+                      <input
+                        type="text"
+                        name="addressLine2"
+                        placeholder="Apartment, suite, unit (optional)"
+                        className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                      />
+                      <p className="mt-1 text-xs text-gray-400">Optional</p>
+                    </div>
+
+                    <div>
+                      <label className="block  font-medium ">
+                        City <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        name="city"
+                        placeholder="e.g. Jaipur"
+                        required
+                        className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block  font-medium ">Contact</label>
+                      <input
+                        type="tel"
+                        name="contact"
+                        placeholder="Phone number (optional)"
+                        className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                      />
+                      <p className="mt-1 text-xs text-gray-400">
+                        If not provided, will remain null.
+                      </p>
+                    </div>
+
+                    <div>
+                      <label className="block  font-medium ">
+                        State <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        name="state"
+                        placeholder="e.g. Rajasthan"
+                        required
+                        className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block  font-medium ">
+                        Country <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        name="country"
+                        placeholder="e.g. India"
+                        required
+                        className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                      />
+                    </div>
+                    <div className=" col-span-2 flex items-center justify-between pt-4 border-t border-gray-100">
+                      <p className="text-sm text-gray-500">
+                        All required fields are marked with an asterisk.
+                      </p>
+                      <div className="flex gap-3">
+                        <button
+                          type="reset"
+                          className="rounded-md px-4 py-2  font-medium border border-gray-300 hover:bg-gray-50"
+                        >
+                          Reset
+                        </button>
+                        <button
+                          type="submit"
+                          className="rounded-md px-4 py-2  font-medium bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                        >
+                          Save Address
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              ) : (
+                <div>
+                  {/* address list */}
+                  <h1 className="text-2xl font-semibold mb-6">My Address</h1>
+                  {/* Address List */}
+                  {users.map((address, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="p-4 border rounded-lg bg-gray-50 mt-3.5 "
+                      >
+                        <h3 className="text-lg font-semibold mb-2">
+                          Delivery Address
+                        </h3>
+                        <p className="text-sm text-gray-700">
+                          {address.addressLine1}
+                          {address.addressLine2 && `, ${address.addressLine2}`} 
+                        </p>
+                        <p className="text-sm text-gray-700"> 
+                          {address.city}, {address.state}
+                        </p>
+                        <p className="text-sm text-gray-700">
+                          {address.country}
+                        </p>
+
+                        <div className="mt-4 flex gap-3">
+                          <button className="text-sm bg-teal-600 text-white px-4 py-1 rounded-lg">
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => deleteAddress(index)}
+                            className="text-sm bg-red-500 text-white px-4 py-1 rounded-lg"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              <p className=" text-sm text-gray-600 py-2 ">
+                {" "}
+                You are allowed to add only 3 addresses{" "}
+              </p>
+            </section>
+          )}
+          {/* change password  */}
           {toggle === "password" && (
             <div>
               <h1 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">

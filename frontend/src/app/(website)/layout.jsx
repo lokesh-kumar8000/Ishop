@@ -3,6 +3,7 @@ import "../globals.css";
 import Header from "@/components/website/Header";
 import Footer from "@/components/website/Footer";
 import StoreProvider from "@/components/StoreProvider";
+import { ToastContainer } from "react-toastify";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,6 +29,18 @@ export default function RootLayout({ children }) {
         <div className=" w-full bg-blue-50 ">
           <div className=" w-full ">
             <StoreProvider>
+              <ToastContainer
+                position="top-center"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+              />
               <Header />
               {children}
               <Footer />
