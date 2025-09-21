@@ -48,7 +48,6 @@ const user = {
       const existingUser = await userModel.findOne({ email: email });
       if (!existingUser) return errorResponse(res, "User not found");
       const decryptedPassword = cryptr.decrypt(existingUser.password);
-      console.log(decryptedPassword);
       if (decryptedPassword !== password)
         return errorResponse(res, "Invalid password");
 
@@ -77,13 +76,15 @@ const user = {
   async address(req, res) {
     try {
       const userId = req.params.userId;
-      const userData = await userModel.findByIdAndUpdate(
+
+      const userData = await userModel.updateOne(
         { _id: userId },
         {
-          $push: { shipping_address: { ...req.body } }, 
+          $push: { shipping_address: { ...req.body } },
         }
       );
-      return createdSuccess(res, "user address updated", userData);
+      const updatedUser = await userModel.findById(userId);
+      return createdSuccess(res, "user address updated", updatedUser);
     } catch (error) {
       console.log(error);
       errorResponse(error);
@@ -118,6 +119,34 @@ const user = {
     } catch (error) {
       console.log(error);
       errorResponse(res);
+    }
+  },
+  async updatePassword(req, res) {
+    try {
+      const user_id = req.params.user_id;
+      const { current, newPass, confirm } = req.body;
+      const user = await userModel.findById(user_id);
+      if (!user) return errorResponse(res, "User not found");
+      const decryptedPassword = cryptr.decrypt(user.password);
+      if (decryptedPassword === current) {
+        if (newPass === confirm) {
+          const encryptedPassword = cryptr.encrypt(newPass);
+          const updatePass = await userModel.findByIdAndUpdate(user_id, {
+            $set: {
+              password: encryptedPassword,
+            },
+          });
+          updatePass.save();
+          return createdSuccess(res, "password updated", updatePass);
+        } else {
+          errorResponse(res, " both password are incurrect ");
+        }
+      } else {
+        errorResponse(res, "Incrrect Old Password");
+      }
+    } catch (error) {
+      console.log(error);
+      errorResponse(error);
     }
   },
 };

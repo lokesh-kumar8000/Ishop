@@ -1907,11 +1907,6 @@
       left: calc(var(--spacing) * 8);
     }
   }
-  .sm\:col-span-2 {
-    @media (width >= 40rem) {
-      grid-column: span 2 / span 2;
-    }
-  }
   .sm\:mt-2 {
     @media (width >= 40rem) {
       margin-top: calc(var(--spacing) * 2);

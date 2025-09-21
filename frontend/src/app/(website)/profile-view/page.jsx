@@ -1,5 +1,6 @@
 "use client";
 import { axioIsnstance, notify } from "@/library/helper";
+import { current } from "@reduxjs/toolkit";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
@@ -38,12 +39,12 @@ export default function AccountInfoPage() {
       </button>
     );
   }
+
   // address submit
-  
-  function addressSubmit(e) { 
+  function addressSubmit(e) {
     e.preventDefault();
     if (users.length >= 3) {
-      notify("You can add only 3 addresses.", false);  
+      notify("You can add only 3 addresses.", false);
       setShowFrom(!showFrom);
     } else {
       if (user?._id) {
@@ -57,8 +58,10 @@ export default function AccountInfoPage() {
             country: e.target.country.value,
           })
           .then((response) => {
-            const newAddress = response.data.data.shipping_address; 
-            setUser((prew) => [...prew, newAddress]);
+            console.log(response.data.data); 
+            const newAddress = response.data.data.shipping_address;
+            // console.log(newAddress,'newAddress');
+            setUser(newAddress);
             notify(response.data.message, response.data.success);
             setShowFrom(!showFrom);
           })
@@ -67,7 +70,7 @@ export default function AccountInfoPage() {
             notify("User not found", false);
             router.push("/user-login");
           });
-      } 
+      }
     }
   }
   // delete address
@@ -85,6 +88,30 @@ export default function AccountInfoPage() {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  function passwordUpadate(e) {
+    e.preventDefault();
+    console.log("click update btn");
+    axioIsnstance
+      .put(`user/password-update/${user?._id}`, {
+        current: e.target.current.value,
+        newPass: e.target.newPass.value,
+        confirm: e.target.confrim.value,
+      })
+      .then((response) => {
+        notify(response.data.message, response.data.success);
+        e.target.reset();
+      })
+      e.target.reset()
+      .catch((err) => {
+        notify(err.response.data.message, err.response.data.success);
+        console.log(err);
+      });
+  }
+
+  if (!user) {
+    return <p>Loading...</p>;
   }
 
   return (
@@ -117,20 +144,21 @@ export default function AccountInfoPage() {
                 Account Info
               </h1>
 
-              <form className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                <div className="flex flex-col">
+              <form className="grid grid-cols-1 gap-4 sm:gap-6">
+                <div className="flex flex-col col-span-1">
                   <label className="text-sm font-medium mb-1">
-                    First Name <span className="text-red-500">*</span>
+                    Your Name <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
-                    placeholder="First Name"
-                    defaultValue="Mark"
+                    placeholder="Enter Your Name"
+                    defaultValue={user.name || " "}
+                    readOnly
                     className="border rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-teal-500"
                   />
                 </div>
 
-                <div className="flex flex-col">
+                {/* <div className="flex flex-col">
                   <label className="text-sm font-medium mb-1">
                     Last Name <span className="text-red-500">*</span>
                   </label>
@@ -140,34 +168,36 @@ export default function AccountInfoPage() {
                     defaultValue="Cole"
                     className="border rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-teal-500"
                   />
-                </div>
+                </div> */}
 
-                <div className="flex flex-col sm:col-span-2">
+                <div className="flex flex-col col-span-1">
                   <label className="text-sm font-medium mb-1">
                     Email Address <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
                     placeholder="Email Address"
-                    defaultValue="swoo@gmail.com"
+                    defaultValue={user.email || " "}
+                    readOnly
                     className="border rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-teal-500"
                   />
                 </div>
 
-                <div className="flex flex-col sm:col-span-2">
+                <div className="flex flex-col col-span-1">
                   <label className="text-sm font-medium mb-1">
                     Phone Number{" "}
                     <span className="text-gray-400">(Optional)</span>
                   </label>
                   <input
                     type="tel"
+                    readOnly
                     placeholder="+1 0231 4554 452"
-                    defaultValue="+1 0231 4554 452"
+                    defaultValue={user.contact || "+1 0231 4554 452"}
                     className="border rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-teal-500"
                   />
                 </div>
 
-                <div className="sm:col-span-2">
+                <div className="col-span-1">
                   <button
                     type="button"
                     className="bg-teal-600 hover:bg-teal-700 text-white font-medium px-5 py-2 rounded-lg text-sm sm:text-base"
@@ -358,9 +388,9 @@ export default function AccountInfoPage() {
                         </h3>
                         <p className="text-sm text-gray-700">
                           {address.addressLine1}
-                          {address.addressLine2 && `, ${address.addressLine2}`} 
+                          {address.addressLine2 && `, ${address.addressLine2}`}
                         </p>
-                        <p className="text-sm text-gray-700"> 
+                        <p className="text-sm text-gray-700">
                           {address.city}, {address.state}
                         </p>
                         <p className="text-sm text-gray-700">
@@ -395,22 +425,50 @@ export default function AccountInfoPage() {
               <h1 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
                 Change Password
               </h1>
-              <form className="flex flex-col gap-4 sm:gap-6 max-w-lg">
-                {["Current", "New", "Confirm"].map((label, i) => (
-                  <div key={i} className="flex flex-col">
-                    <label className="text-sm font-medium mb-1">
-                      {label} Password <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="password"
-                      placeholder={`Enter ${label.toLowerCase()} password`}
-                      className="border rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-teal-500"
-                    />
-                  </div>
-                ))}
+              <form
+                onSubmit={passwordUpadate}
+                className="flex flex-col gap-4 sm:gap-6 max-w-lg"
+              >
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium mb-1">
+                    Current Password <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    name="current"
+                    placeholder={`Enter Current password`}
+                    required
+                    className="border rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium mb-1">
+                    New Password <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    name="newPass"
+                    placeholder={`Enter New password`}
+                    required
+                    className="border rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium mb-1">
+                    confrim Password <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    name="confrim"
+                    required
+                    placeholder={`Enter confrim password`}
+                    className="border rounded-lg px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  />
+                </div>
+
                 <div>
                   <button
-                    type="button"
+                    type="submit"
                     className="bg-teal-600 hover:bg-teal-700 text-white font-medium px-5 py-2 rounded-lg text-sm sm:text-base"
                   >
                     Update Password

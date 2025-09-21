@@ -58,7 +58,7 @@ export default function CartPage({ products }) {
                         {product.name}
                       </h3>
                       <p className="text-red-600 font-bold text-lg">
-                        ₹{product.finalPrice}
+                        ₹{product.finalPrice*item.qty}
                       </p>
 
                       {/* Quantity */}

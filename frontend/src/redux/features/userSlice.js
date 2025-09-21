@@ -15,7 +15,7 @@ export const userSlice = createSlice({
       localStorage.setItem("user", JSON.stringify(state));
     },
     userAdd: (state) => {
-      const user = JSON.parse(localStorage.getItem("user"));
+      const user = JSON.parse(localStorage.getItem("user")); 
       if (user) {
         state.data = user.data;
         state.token = user.token;

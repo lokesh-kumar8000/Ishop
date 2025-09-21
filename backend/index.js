@@ -10,6 +10,7 @@ const brandRouter = require("./router/brand.router");
 const productRouter = require("./router/product.router");
 const adminRouter = require("./router/admin.router");
 const userRouter = require("./router/user.router");
+const cartRouter = require("./router/cart.router");
 const server = express();
 server.use(cors({ origin: "http://localhost:3000", credentials: true }));
 server.use(cookieParser());
@@ -20,6 +21,7 @@ server.use("/brand", brandRouter);
 server.use("/product", productRouter);
 server.use("/admin", adminRouter);
 server.use("/user", userRouter);
+server.use("/cart", cartRouter);
 server.use(express.static("./public"));
 
 server.listen(5000, () => {

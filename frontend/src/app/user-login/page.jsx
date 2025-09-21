@@ -1,5 +1,5 @@
 "use client";
-import { axioIsnstance } from "@/library/helper";
+import { axioIsnstance, notify } from "@/library/helper";
 import { userLogin } from "@/redux/features/userSlice";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -11,9 +11,9 @@ function LoginSignUpPage() {
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-
   const toggleForm = () => setIsLogin(!isLogin);
 
+  const cart = JSON.parse(localStorage.getItem("cart"));
   function logInSubmit(e) {
     e.preventDefault();
     const data = {
@@ -22,7 +22,7 @@ function LoginSignUpPage() {
     };
     axioIsnstance
       .post("user/login", data)
-      .then((response) => {
+      .then(async (response) => {
         if (response.data.success) {
           dispatcher(
             userLogin({
@@ -30,17 +30,39 @@ function LoginSignUpPage() {
               user: response.data.data.user,
             })
           );
+          const updatedCart = await axioIsnstance.post("cart/sync", {
+            cart: cart != null ? cart.items : null,
+            userId: response.data?.data?.user?._id,
+          });
+
+          let final_total = 0;
+          let original_total = 0;
+
+          const items = updatedCart?.data?.data?.cart.map((prod) => {
+            original_total += prod.product_id.originalPrice;
+            final_total += prod.product_id.finalPrice;
+            return {
+              productId: prod.product_id._id,
+              qty: prod.qty,
+            };
+          });
+
+          localStorage.setItem('cart',JSON.stringify({items,original_total,final_total}))
+
+          notify(response.data.message, response.data.success);
+          console.log(updatedCart.data.data.cart, "updatedCart");
           router.push("/");
         }
       })
       .catch((error) => {
         console.log(error);
+        notify(error.response.data.message, error.response.data.success);
       });
-  } 
-    function signUpSubmit(e) {
+  }
+  function signUpSubmit(e) {
     e.preventDefault();
     const data = {
-      name:e.target.name.value,
+      name: e.target.name.value,
       email: e.target.email.value,
       password: e.target.password.value,
     };
