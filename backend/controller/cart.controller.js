@@ -3,6 +3,7 @@ const {
   createdSuccess,
   errorResponse,
   successResponse,
+  updateresponse,
 } = require("../utility/response");
 
 const cart = {
@@ -21,15 +22,15 @@ const cart = {
       await Promise.all(
         cart.map(async (product) => {
           const existingItem = await cartModel.findOne({
-            user_id: userId, 
-            product_id: product.productId, 
+            user_id: userId,
+            product_id: product.productId,
           });
 
-          if (existingItem) { 
-            existingItem.qty += Number(product.qty); 
-            await existingItem.save(); 
-          } else { 
-            await cartModel.create({ 
+          if (existingItem) {
+            existingItem.qty += Number(product.qty);
+            await existingItem.save();
+          } else {
+            await cartModel.create({
               user_id: userId,
               product_id: product.productId,
               qty: product.qty,
@@ -50,8 +51,6 @@ const cart = {
 
   async addtoCart(req, res) {
     try {
-      console.log(req.body);
-
       const { productId, qty, userId } = req.body;
 
       const existingItem = await cartModel.findOne({
@@ -79,8 +78,6 @@ const cart = {
   async removeCart(req, res) {
     try {
       const { id, userId } = req.params;
-      // console.log(id, "id");
-      // console.log(userId, "userId");
 
       await cartModel.deleteOne({
         user_id: userId,
@@ -93,9 +90,31 @@ const cart = {
     }
   },
 
-  //   get(req, res) {
-  //     console.log("hello");
-  //   },
+  async updateDb(req, res) {
+    try {
+      const { id, userId, flag } = req.params;
+      const existingCart = await cartModel.findOne({
+        user_id: userId,
+        product_id: id,
+      });
+      if (!existingCart) return errorResponse(res, "cart not found");
+
+      if (flag == "+") {
+        existingCart.qty++;
+      } else if (flag == "-") {
+        if (existingCart.qty > 1) {
+          existingCart.qty--;
+        }
+      } else {
+        errorResponse(res, "flag is Missing!");
+      }
+      existingCart.save();
+      return updateresponse(res, "Cart Qty Change");
+    } catch (error) {
+      console.log(error);
+      errorResponse(res);
+    }
+  },
 };
 
 module.exports = cart;

@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { notify } from "@/library/helper";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 export const cartSlice = createSlice({
   name: "cart",
@@ -10,6 +11,7 @@ export const cartSlice = createSlice({
   reducers: {
     addToCart: (state, { payload }) => {
       const { productId, originalPrice, finalPrice } = payload;
+      // console.log(payload, "payload");
       const existingItem = state.items.find(
         (item) => item.productId == productId
       );
@@ -37,23 +39,32 @@ export const cartSlice = createSlice({
       state.original_total -= originalPrice * payload.qty;
       localStorage.setItem("cart", JSON.stringify(state));
     },
-    // increment: (state, { payload }) => {
-    //   const { productId, originalPrice, finalPrice, qty } = payload;
-    //   const product = state.items.find((item) => item.productId === productId);
-    //   if (product) {
-    //     product.qty = qty + 1;
-    //   }
-      
-      // state.final_total += finalPrice * product.qty;
-      // state.original_total += originalPrice * product.qty;
 
-      // console.log(product.qty, "product"); 
-      // console.log(product.qty, "qty");
-      // console.log(finalPrice * qty);
-    // },
+    incDec: (state, { payload }) => {
+      const { flag, productId, original_total, final_total } = payload;
+      const existingItem = state.items.find(
+        (item) => item.productId == productId
+      );
+      if (existingItem) {
+        if (flag == "+") {
+          existingItem.qty++;
+          state.final_total += final_total;
+          state.original_total += original_total;
+        } else if (flag == "-") {
+          if (existingItem.qty > 1) {
+            existingItem.qty--;
+            state.final_total -= final_total;
+            state.original_total -= original_total;
+          } else {
+            notify("Minimum quantity is 1", true);
+          }
+        }
+      }
+      localStorage.setItem("cart", JSON.stringify(state));
+    },
   },
 });
 
-export const { addToCart, lstoCart, removeCart, increment } = cartSlice.actions;
+export const { addToCart, lstoCart, removeCart, incDec } = cartSlice.actions;
 
 export default cartSlice.reducer;

@@ -17,7 +17,6 @@ function CartBtn({ finalPrice, originalPrice, productId }) {
           userId: user._id,
         })
         .then((response) => {
-          console.log(response.data.message);
           notify(response.data.message, response.data.success);
           dispatcher(
             addToCart({
@@ -34,9 +33,9 @@ function CartBtn({ finalPrice, originalPrice, productId }) {
     } else {
       dispatcher(
         addToCart({
-          productId,
-          finalPrice,
-          originalPrice,
+          productId, 
+          finalPrice, 
+          originalPrice, 
         })
       );
       notify("Cart Add SuccessFully", true);

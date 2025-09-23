@@ -14,7 +14,6 @@ function LoginSignUpPage() {
   const toggleForm = () => setIsLogin(!isLogin);
 
   const cart = JSON.parse(localStorage.getItem("cart"));
-  console.log(cart,'cart');
   function logInSubmit(e) {
     e.preventDefault();
     const data = {
@@ -35,18 +34,19 @@ function LoginSignUpPage() {
             cart: cart != null ? cart.items : null,
             userId: response.data?.data?.user?._id,
           });
-          console.log(updatedCart, "updatedCart"); 
           let final_total = 0;
           let original_total = 0;
 
           const items = updatedCart?.data?.data?.cart.map((prod) => {
-            original_total += prod.product_id.originalPrice;
-            final_total += prod.product_id.finalPrice;
+            original_total += prod?.product_id?.originalPrice*prod.qty || 0;
+            final_total += prod?.product_id?.finalPrice*prod.qty || 0;
             return {
               productId: prod.product_id._id,
               qty: prod.qty,
             };
           });
+          console.log(final_total, "final_total");
+          console.log(original_total, "original_total");
 
           localStorage.setItem(
             "cart",

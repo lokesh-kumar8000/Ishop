@@ -1,6 +1,6 @@
 "use client";
 import { axioIsnstance, notify } from "@/library/helper";
-import { increment, removeCart } from "@/redux/features/cartSlice";
+import { incDec, removeCart } from "@/redux/features/cartSlice";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { FaMinus, FaPlus } from "react-icons/fa";
@@ -11,7 +11,7 @@ export default function CartPage({ products }) {
   const dispatcher = useDispatch();
   const cart = useSelector((state) => state.cart);
   const user = useSelector((state) => state.user.data);
-  // console.log(user,'user');
+  // console.log(user, "user");
 
   function checkoutHandler() {
     if (user) {
@@ -21,32 +21,68 @@ export default function CartPage({ products }) {
     }
   }
 
-  // useEffect(() => {
-  //   if (user === null ) {
-  //     router.push("/user-login");
-  //   } else {
-  //     router.push("/checkout");
-  //   }
-  // }, [user]);
-
   function removeHandler(productId, qty, originalPrice, finalPrice) {
-    axioIsnstance
-      .delete(`cart/delete-cart/${productId}/${user._id}`)
-      .then((response) => {
-        notify(response.data.message, response.data.success); 
-        dispatcher(
-          removeCart({
-            productId: productId, 
-            finalPrice: finalPrice, 
-            originalPrice: originalPrice, 
-            qty: qty,
-          })
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-          notify(err.response.data.message, err.response.data.success); 
-      });
+    if (user != null) {
+      axioIsnstance
+        .delete(`cart/delete-cart/${productId}/${user._id}`)
+        .then((response) => {
+          notify(response.data.message, response.data.success);
+          dispatcher(
+            removeCart({
+              productId: productId,
+              finalPrice: finalPrice,
+              originalPrice: originalPrice,
+              qty: qty,
+            })
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+          notify(err.response.data.message, err.response.data.success);
+        });
+    } else {
+      dispatcher(
+        removeCart({
+          productId: productId,
+          finalPrice: finalPrice,
+          originalPrice: originalPrice,
+          qty: qty,
+        })
+      );
+      notify("Cart Delete Successfully", true);
+    }
+  }
+
+  function updateCart({ flag, productId, original_total, final_total }) {
+    if (user != null) {
+      axioIsnstance
+        .patch(`cart/inc-to-dec/${productId}/${user._id}/${flag}`)
+        .then((response) => {
+          // notify(response.data.message, response.data.success);
+          console.log(response.data);
+          dispatcher(
+            incDec({
+              flag,
+              productId,
+              original_total,
+              final_total,
+            })
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+          notify(err.response.data.message, err.response.data.success);
+        });
+    } else {
+      dispatcher(
+        incDec({
+          flag,
+          productId,
+          original_total,
+          final_total,
+        }) 
+      );
+    }
   }
 
   return (
@@ -85,20 +121,28 @@ export default function CartPage({ products }) {
 
                       {/* Quantity */}
                       <div className="flex items-center gap-2 mt-2">
-                        <button className="w-7 h-7 flex items-center justify-center border rounded-md hover:bg-gray-100">
+                        <button
+                          onClick={() =>
+                            updateCart({
+                              flag: "-",
+                              productId: product._id,
+                              original_total: product.originalPrice,
+                              final_total: product.finalPrice,
+                            })
+                          }
+                          className="w-7 h-7 flex items-center justify-center border rounded-md hover:bg-gray-100"
+                        >
                           <FaMinus size={12} />
                         </button>
                         <span className="px-2"> {item.qty} </span>
                         <button
                           onClick={() =>
-                            dispatcher(
-                              increment({
-                                productId: product._id,
-                                finalPrice: product.finalPrice,
-                                originalPrice: product.originalPrice,
-                                qty: item.qty,
-                              })
-                            )
+                            updateCart({
+                              flag: "+",
+                              productId: product._id,
+                              original_total: product.originalPrice,
+                              final_total: product.finalPrice,
+                            })
                           }
                           className="w-7 h-7 flex items-center justify-center border rounded-md hover:bg-gray-100"
                         >
