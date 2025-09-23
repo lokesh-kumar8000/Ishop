@@ -19,6 +19,7 @@ export default function Header() {
     dispatcher(lstoCart());
     dispatcher(userAdd());
   }, [dispatcher]);
+  // console.log(user,'user');
 
   return (
     <div className="  w-full  ">
@@ -92,10 +93,10 @@ export default function Header() {
           {/* Right side */}
           <div className="flex items-center space-x-3">
             <div className="ml-2  hidden sm:block">
-              {user ? (
+              {user?.data ? (
                 <p className="font-bold text-[14px] uppercase "> hi {user?.data?.name} </p>
               ) : (
-                <p className="font-bold text-[14px]">Log in / Register</p>
+                <Link href={'/user-login'} > <p className="font-bold text-[14px]">Log in / Register</p> </Link>
               )}
               {/* <p className="text-[11px] text-[#666666]">Welcome</p>
               <p className="font-bold text-[14px]">Log in / Register</p> */}

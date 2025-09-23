@@ -1,4 +1,5 @@
 "use client";
+import { axioIsnstance, notify } from "@/library/helper";
 import { increment, removeCart } from "@/redux/features/cartSlice";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
@@ -10,6 +11,7 @@ export default function CartPage({ products }) {
   const dispatcher = useDispatch();
   const cart = useSelector((state) => state.cart);
   const user = useSelector((state) => state.user.data);
+  // console.log(user,'user');
 
   function checkoutHandler() {
     if (user) {
@@ -26,6 +28,26 @@ export default function CartPage({ products }) {
   //     router.push("/checkout");
   //   }
   // }, [user]);
+
+  function removeHandler(productId, qty, originalPrice, finalPrice) {
+    axioIsnstance
+      .delete(`cart/delete-cart/${productId}/${user._id}`)
+      .then((response) => {
+        notify(response.data.message, response.data.success); 
+        dispatcher(
+          removeCart({
+            productId: productId, 
+            finalPrice: finalPrice, 
+            originalPrice: originalPrice, 
+            qty: qty,
+          })
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+          notify(err.response.data.message, err.response.data.success); 
+      });
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -58,7 +80,7 @@ export default function CartPage({ products }) {
                         {product.name}
                       </h3>
                       <p className="text-red-600 font-bold text-lg">
-                        ₹{product.finalPrice*item.qty}
+                        ₹{product.finalPrice * item.qty}
                       </p>
 
                       {/* Quantity */}
@@ -85,16 +107,14 @@ export default function CartPage({ products }) {
                       </div>
                     </div>
                     <button
-                      onClick={() => {
-                        dispatcher(
-                          removeCart({
-                            productId: product._id,
-                            finalPrice: product.finalPrice,
-                            originalPrice: product.originalPrice,
-                            qty: item.qty,
-                          })
-                        );
-                      }}
+                      onClick={() =>
+                        removeHandler(
+                          product._id,
+                          item.qty,
+                          product.originalPrice,
+                          product.finalPrice
+                        )
+                      }
                       className=" bg-red-600 text-white px-3 py-2 rounded-[10px] cursor-pointer "
                     >
                       {" "}

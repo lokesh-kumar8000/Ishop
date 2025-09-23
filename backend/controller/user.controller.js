@@ -75,19 +75,31 @@ const user = {
 
   async address(req, res) {
     try {
+      const { userData, loginAt, token } = req.body;
       const userId = req.params.userId;
-
-      const userData = await userModel.updateOne(
+      await userModel.updateOne(
         { _id: userId },
         {
-          $push: { shipping_address: { ...req.body } },
+          $push: {
+            shipping_address: { ...userData },
+          },
         }
       );
       const updatedUser = await userModel.findById(userId);
-      return createdSuccess(res, "user address updated", updatedUser);
+
+      return createdSuccess(
+        res,
+        "user address updated",
+        (userWithOutPassword = {
+          ...updatedUser.toJSON(),
+          password: null,
+          loginAt,
+          token,
+        })
+      );
     } catch (error) {
       console.log(error);
-      errorResponse(error);
+      errorResponse(res);
     }
   },
   async get(req, res) {

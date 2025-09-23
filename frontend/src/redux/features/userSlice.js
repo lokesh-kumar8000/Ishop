@@ -12,10 +12,10 @@ export const userSlice = createSlice({
       state.data = payload.user;
       state.token = payload.token;
       state.loginAt = new Date().toISOString();
-      localStorage.setItem("user", JSON.stringify(state));
-    },
+      localStorage.setItem("user", JSON.stringify(state)); 
+    }, 
     userAdd: (state) => {
-      const user = JSON.parse(localStorage.getItem("user")); 
+      const user = JSON.parse(localStorage.getItem("user"));  
       if (user) {
         state.data = user.data;
         state.token = user.token;

@@ -37,12 +37,12 @@ export const cartSlice = createSlice({
       state.original_total -= originalPrice * payload.qty;
       localStorage.setItem("cart", JSON.stringify(state));
     },
-    increment: (state, { payload }) => {
-      const { productId, originalPrice, finalPrice, qty } = payload;
-      const product = state.items.find((item) => item.productId === productId);
-      if (product) {
-        product.qty = qty + 1;
-      }
+    // increment: (state, { payload }) => {
+    //   const { productId, originalPrice, finalPrice, qty } = payload;
+    //   const product = state.items.find((item) => item.productId === productId);
+    //   if (product) {
+    //     product.qty = qty + 1;
+    //   }
       
       // state.final_total += finalPrice * product.qty;
       // state.original_total += originalPrice * product.qty;
@@ -50,7 +50,7 @@ export const cartSlice = createSlice({
       // console.log(product.qty, "product"); 
       // console.log(product.qty, "qty");
       // console.log(finalPrice * qty);
-    },
+    // },
   },
 });
 

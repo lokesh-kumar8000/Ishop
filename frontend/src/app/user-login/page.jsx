@@ -14,6 +14,7 @@ function LoginSignUpPage() {
   const toggleForm = () => setIsLogin(!isLogin);
 
   const cart = JSON.parse(localStorage.getItem("cart"));
+  console.log(cart,'cart');
   function logInSubmit(e) {
     e.preventDefault();
     const data = {
@@ -34,7 +35,7 @@ function LoginSignUpPage() {
             cart: cart != null ? cart.items : null,
             userId: response.data?.data?.user?._id,
           });
-
+          console.log(updatedCart, "updatedCart"); 
           let final_total = 0;
           let original_total = 0;
 
@@ -47,7 +48,10 @@ function LoginSignUpPage() {
             };
           });
 
-          localStorage.setItem('cart',JSON.stringify({items,original_total,final_total}))
+          localStorage.setItem(
+            "cart",
+            JSON.stringify({ items, original_total, final_total })
+          );
 
           notify(response.data.message, response.data.success);
           console.log(updatedCart.data.data.cart, "updatedCart");
