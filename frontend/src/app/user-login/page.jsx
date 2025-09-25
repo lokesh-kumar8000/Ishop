@@ -7,8 +7,8 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 
 function LoginSignUpPage() {
-  const dispatcher = useDispatch();
-  const router = useRouter();
+  const dispatcher = useDispatch(); 
+  const router = useRouter(); 
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const toggleForm = () => setIsLogin(!isLogin);
@@ -45,8 +45,8 @@ function LoginSignUpPage() {
               qty: prod.qty,
             };
           });
-          console.log(final_total, "final_total");
-          console.log(original_total, "original_total");
+          // console.log(final_total, "final_total");
+          // console.log(original_total, "original_total");
 
           localStorage.setItem(
             "cart",
@@ -54,7 +54,7 @@ function LoginSignUpPage() {
           );
 
           notify(response.data.message, response.data.success);
-          console.log(updatedCart.data.data.cart, "updatedCart");
+          // console.log(updatedCart.data.data.cart, "updatedCart");
           router.push("/");
         }
       })

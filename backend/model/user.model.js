@@ -26,6 +26,11 @@ const ShippingAddressSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    postCode: {
+      type: Number,
+      required: true,
+      default: null,
+    },
   },
   {
     _id: false,

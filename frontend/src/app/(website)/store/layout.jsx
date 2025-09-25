@@ -17,8 +17,8 @@ export default async function RootLayout({ children }) {
   const colors = colorJSON.data;
 
   return (
-    <html lang="en">
-      <body>
+    // <html lang="en">
+    //   <body>
         <div className=" w-full ">
           {/* navigation */}
           <div className="  bg-white rounded-[10px] py-5 px-7.5 my-5 ">
@@ -51,7 +51,7 @@ export default async function RootLayout({ children }) {
             </div>
           </div>
         </div>
-      </body>
-    </html>
+    //   </body>
+    // </html>
   );
 }

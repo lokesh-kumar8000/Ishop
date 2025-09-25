@@ -45,9 +45,9 @@ function CartBtn({ finalPrice, originalPrice, productId }) {
   return (
     <button
       onClick={addToCartHandler}
-      className="w-full mt-3 bg-[#1ABA1A] hover:bg-[#068506] text-white text-[14px] py-2 rounded-lg font-medium"
+      className="w-full cursor-pointer mt-3 bg-[#1ABA1A] hover:bg-[#068506] text-white text-[14px] py-2 rounded-lg font-medium"
     >
-      Add to Cart
+      Add to Cart 
     </button>
   );
 }

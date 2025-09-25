@@ -1,19 +1,21 @@
 "use client";
 import { axioIsnstance, notify } from "@/library/helper";
+import { clearCart } from "@/redux/features/cartSlice";
+import { clearUser, userAddressAdd } from "@/redux/features/userSlice";
 import { current } from "@reduxjs/toolkit";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function AccountInfoPage() {
   const user = useSelector((state) => state?.user);
-
   const [toggle, setToggle] = useState("account");
   const [showFrom, setShowFrom] = useState(false);
   const router = useRouter();
   const [users, setUser] = useState([]);
+  const dispatcher = useDispatch()
 
   useEffect(() => {
     axioIsnstance
@@ -58,6 +60,7 @@ export default function AccountInfoPage() {
             contact: e.target.contact.value,
             state: e.target.state.value,
             country: e.target.country.value,
+            postCode: e.target.postCode.value,
           },
           token: user.token,
           loginAt: user.loginAt,
@@ -66,7 +69,8 @@ export default function AccountInfoPage() {
           .put(`user/address/${user?.data?._id}`, userData)
           .then((response) => {
             const newAddress = response.data.data.shipping_address;
-            setUser(newAddress);
+            console.log(newAddress);  
+            setUser(newAddress);  
             notify(response.data.message, response.data.success);
             setShowFrom(!showFrom);
           })
@@ -115,6 +119,10 @@ export default function AccountInfoPage() {
     });
   }
 
+  function logOutHandler(){
+    dispatcher(clearCart());
+    dispatcher(clearUser());
+  }
   if (!user) {
     return <p>Loading...</p>;
   }
@@ -142,8 +150,9 @@ export default function AccountInfoPage() {
             <Button text={"Account info"} tab="account" />
             <Button text={"My Order"} tab="order" />
             <Button text={"My Address"} tab="address" />
-            <Button text={"Change Password"} tab="password" />
-          </div>
+            <Button text={"Change Password"} tab="password" /> 
+          </div> 
+          <button onClick={logOutHandler} className=" bg-red-500 text-white py-2 px-3 mt-3 rounded-[10px] font-semibold cursor-pointer " > LogOut </button>
         </div>
 
         {/* Main Content */}
@@ -300,6 +309,7 @@ export default function AccountInfoPage() {
                         <input
                           type="text"
                           name="addressLine2"
+                          required
                           placeholder="Apartment, suite, unit (optional)"
                           className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-300"
                         />
@@ -324,12 +334,10 @@ export default function AccountInfoPage() {
                         <input
                           type="tel"
                           name="contact"
-                          placeholder="Phone number (optional)"
+                          placeholder="Phone number "
+                          required
                           className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-300"
                         />
-                        <p className="mt-1 text-xs text-gray-400">
-                          If not provided, will remain null.
-                        </p>
                       </div>
 
                       <div>
@@ -353,6 +361,18 @@ export default function AccountInfoPage() {
                           type="text"
                           name="country"
                           placeholder="e.g. India"
+                          required
+                          className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                        />
+                      </div>
+                      <div className="col-span-2">
+                        <label className="block  font-medium ">
+                          PostCode <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="number"
+                          name="postCode"
+                          placeholder="e.g. 302006"
                           required
                           className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-300"
                         />
@@ -401,13 +421,10 @@ export default function AccountInfoPage() {
                             {address.city}, {address.state}
                           </p>
                           <p className="text-sm text-gray-700">
-                            {address.country}
+                            {address.country} , {address.postCode}
                           </p>
 
                           <div className="mt-4 flex gap-3">
-                            <button className="text-sm bg-teal-600 text-white px-4 py-1 rounded-lg">
-                              Edit
-                            </button>
                             <button
                               onClick={() => deleteAddress(index)}
                               className="text-sm bg-red-500 text-white px-4 py-1 rounded-lg"
@@ -490,7 +507,7 @@ export default function AccountInfoPage() {
               <NotLogIn />
             ))}
         </div>
-      </div>
+      </div> 
     </div>
   );
 }
@@ -507,12 +524,18 @@ const NotLogIn = () => {
         </p>
 
         <div className="flex flex-col space-y-3">
-         <Link href={'/user-login'} className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg transition duration-300" >
+          <Link
+            href={"/user-login"}
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg transition duration-300"
+          >
             Login
-         </Link>
-         <Link href={'/user-login'} className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-lg transition duration-300" >
-             Signup
-         </Link>
+          </Link>
+          <Link
+            href={"/user-login"}
+            className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-lg transition duration-300"
+          >
+            Signup
+          </Link>
         </div>
       </div>
     </div>

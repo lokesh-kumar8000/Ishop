@@ -75,8 +75,8 @@ const user = {
 
   async address(req, res) {
     try {
-      const { userData, loginAt, token } = req.body;
-      const userId = req.params.userId;
+      const { userData, loginAt, token } = req.body; 
+      const userId = req.params.userId; 
       await userModel.updateOne(
         { _id: userId },
         {
@@ -85,12 +85,11 @@ const user = {
           },
         }
       );
-      const updatedUser = await userModel.findById(userId);
-
-      return createdSuccess(
-        res,
+      const updatedUser = await userModel.findById(userId); 
+      return createdSuccess( 
+        res, 
         "user address updated",
-        (userWithOutPassword = {
+        (userWithOutPassword = { 
           ...updatedUser.toJSON(),
           password: null,
           loginAt,
