@@ -1,6 +1,7 @@
 const cartModel = require("../model/cart.model");
 const orderModel = require("../model/order.model");
-const { errorResponse } = require("../utility/response");
+const mongoose = require("mongoose");
+const { errorResponse, successResponse } = require("../utility/response");
 
 const orderController = {
   async orderPlace(req, res) {
@@ -38,6 +39,25 @@ const orderController = {
           message: "Order place",
           order_id: order._id,
         });
+      }
+    } catch (error) {
+      console.log(error);
+      errorResponse(res);
+    }
+  },
+  async orderGet(req, res) {
+    try {
+      const id = req.params.id;
+      let orderList = null;
+      if (id == null) {
+        orderList = await orderModel.find();
+      } else {
+        orderList = await orderModel.find({
+          user_id: new mongoose.Types.ObjectId(id),
+        });
+      }
+      if (orderList) {
+        return successResponse(res, "Order List Found", orderList);
       }
     } catch (error) {
       console.log(error);

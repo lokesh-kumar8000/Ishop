@@ -1,7 +1,11 @@
 "use client";
 import { axioIsnstance, notify } from "@/library/helper";
 import { clearCart } from "@/redux/features/cartSlice";
-import { clearUser, userAddressAdd } from "@/redux/features/userSlice";
+import {
+  addAddress,
+  clearUser,
+  removeAddress,
+} from "@/redux/features/userSlice";
 import { current } from "@reduxjs/toolkit";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -13,10 +17,12 @@ export default function AccountInfoPage() {
   const user = useSelector((state) => state?.user);
   const [toggle, setToggle] = useState("account");
   const [showFrom, setShowFrom] = useState(false);
-  const router = useRouter();
   const [users, setUser] = useState([]);
-  const dispatcher = useDispatch()
+  const [order, setOrder] = useState([]);
+  const router = useRouter(); 
+  const dispatcher = useDispatch(); 
 
+  // get Address
   useEffect(() => {
     axioIsnstance
       .get(`user/get/${user?.data?._id}`)
@@ -25,6 +31,18 @@ export default function AccountInfoPage() {
       })
       .catch((err) => {
         console.log(err);
+      });
+  }, [user?.data?._id]);
+
+  // get order
+  useEffect(() => {
+    axioIsnstance
+      .get(`order/get/${user?.data?._id}`)
+      .then((response) => {
+        setOrder(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   }, [user?.data?._id]);
 
@@ -69,10 +87,10 @@ export default function AccountInfoPage() {
           .put(`user/address/${user?.data?._id}`, userData)
           .then((response) => {
             const newAddress = response.data.data.shipping_address;
-            console.log(newAddress);  
-            setUser(newAddress);  
+            setUser(newAddress);
             notify(response.data.message, response.data.success);
             setShowFrom(!showFrom);
+            dispatcher(addAddress(newAddress));
           })
           .catch((err) => {
             console.log(err);
@@ -91,6 +109,7 @@ export default function AccountInfoPage() {
         setUser((prew) => {
           const updated = [...prew];
           updated.splice(index, 1);
+          dispatcher(removeAddress(index));
           return updated;
         });
       })
@@ -119,10 +138,11 @@ export default function AccountInfoPage() {
     });
   }
 
-  function logOutHandler(){
+  function logOutHandler() {
     dispatcher(clearCart());
     dispatcher(clearUser());
   }
+
   if (!user) {
     return <p>Loading...</p>;
   }
@@ -150,9 +170,19 @@ export default function AccountInfoPage() {
             <Button text={"Account info"} tab="account" />
             <Button text={"My Order"} tab="order" />
             <Button text={"My Address"} tab="address" />
-            <Button text={"Change Password"} tab="password" /> 
-          </div> 
-          <button onClick={logOutHandler} className=" bg-red-500 text-white py-2 px-3 mt-3 rounded-[10px] font-semibold cursor-pointer " > LogOut </button>
+            <Button text={"Change Password"} tab="password" />
+          </div>
+          {user?.data != null ? (
+            <button
+              onClick={logOutHandler}
+              className=" bg-red-500 text-white py-2 px-3 mt-3 rounded-[10px] font-semibold cursor-pointer "
+            >
+              {" "}
+              LogOut{" "}
+            </button>
+          ) : (
+            ""
+          )}
         </div>
 
         {/* Main Content */}
@@ -227,35 +257,39 @@ export default function AccountInfoPage() {
                   My Orders
                 </h1>
                 <div className="flex flex-col gap-4 sm:gap-6">
-                  {["Delivered", "Shipped", "Cancelled"].map((status, i) => (
+                  {order.map((ord, i) => (
                     <div
                       key={i}
                       className="border rounded-xl p-4 sm:p-6 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
                     >
                       <div>
                         <h2 className="font-semibold text-base sm:text-lg">
-                          Order #{12345 + i}
+                          Order #{ord._id}
                         </h2>
                         <p className="text-gray-500 text-xs sm:text-sm">
-                          Placed on: {10 - i} Sep 2025
+                          Placed on: { new Date(ord.createdAt).toLocaleString()}
                         </p>
                         <p className="text-gray-500 text-xs sm:text-sm">
                           Status:{" "}
                           <span
                             className={`font-medium ${
-                              status === "Delivered"
+                              ord.order_status == "0"
                                 ? "text-green-600"
-                                : status === "Shipped"
+                                : ord.order_status === "1"
                                 ? "text-yellow-600"
                                 : "text-red-600"
                             }`}
                           >
-                            {status}
+                            { ord.order_status == "0"
+                                ? "Delivery"
+                                : ord.order_status === "1"
+                                ? "Shipped"
+                                : " Cancel "}
                           </span>
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold">₹{1499 + i * 500}</p>
+                        <p className="font-semibold">₹{ord.order_total}</p>
                         <button className="mt-1 sm:mt-2 text-xs sm:text-sm text-teal-600 hover:underline">
                           View Details
                         </button>
@@ -427,7 +461,7 @@ export default function AccountInfoPage() {
                           <div className="mt-4 flex gap-3">
                             <button
                               onClick={() => deleteAddress(index)}
-                              className="text-sm bg-red-500 text-white px-4 py-1 rounded-lg"
+                              className="text-sm bg-red-500 text-white px-4 py-1 rounded-lg cursor-pointer "
                             >
                               Delete
                             </button>
@@ -507,7 +541,7 @@ export default function AccountInfoPage() {
               <NotLogIn />
             ))}
         </div>
-      </div> 
+      </div>
     </div>
   );
 }

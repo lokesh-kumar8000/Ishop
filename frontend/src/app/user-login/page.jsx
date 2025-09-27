@@ -7,8 +7,8 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 
 function LoginSignUpPage() {
-  const dispatcher = useDispatch(); 
-  const router = useRouter(); 
+  const dispatcher = useDispatch();
+  const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const toggleForm = () => setIsLogin(!isLogin);
@@ -38,23 +38,19 @@ function LoginSignUpPage() {
           let original_total = 0;
 
           const items = updatedCart?.data?.data?.cart.map((prod) => {
-            original_total += prod?.product_id?.originalPrice*prod.qty || 0;
-            final_total += prod?.product_id?.finalPrice*prod.qty || 0;
+            original_total += prod?.product_id?.originalPrice * prod.qty || 0;
+            final_total += prod?.product_id?.finalPrice * prod.qty || 0;
             return {
               productId: prod.product_id._id,
               qty: prod.qty,
             };
           });
-          // console.log(final_total, "final_total");
-          // console.log(original_total, "original_total");
-
           localStorage.setItem(
             "cart",
             JSON.stringify({ items, original_total, final_total })
           );
 
           notify(response.data.message, response.data.success);
-          // console.log(updatedCart.data.data.cart, "updatedCart");
           router.push("/");
         }
       })
@@ -63,6 +59,7 @@ function LoginSignUpPage() {
         notify(error.response.data.message, error.response.data.success);
       });
   }
+
   function signUpSubmit(e) {
     e.preventDefault();
     const data = {
@@ -72,7 +69,7 @@ function LoginSignUpPage() {
     };
     axioIsnstance
       .post("user/register", data)
-      .then((response) => {
+      .then(async (response) => {
         if (response.data.success) {
           dispatcher(
             userLogin({
@@ -80,6 +77,27 @@ function LoginSignUpPage() {
               user: response.data.data.user,
             })
           );
+          const updatedCart = await axioIsnstance.post("cart/sync", {
+            cart: cart != null ? cart.items : null,
+            userId: response.data?.data?.user?._id,
+          });
+          let final_total = 0;
+          let original_total = 0;
+
+          const items = updatedCart?.data?.data?.cart.map((prod) => {
+            original_total += prod?.product_id?.originalPrice * prod.qty || 0;
+            final_total += prod?.product_id?.finalPrice * prod.qty || 0;
+            return {
+              productId: prod.product_id._id,
+              qty: prod.qty,
+            };
+          });
+          localStorage.setItem(
+            "cart",
+            JSON.stringify({ items, original_total, final_total })
+          );
+
+          notify(response.data.message, response.data.success);
           router.push("/");
         }
       })

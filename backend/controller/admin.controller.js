@@ -22,7 +22,7 @@ const admin = {
         { expiresIn: "7d" }
       );
       res.cookie("admin_token", token, {
-        maxAge: 7 * 24 * 1000 * 60 * 60, //1 hour
+        maxAge: 7 * 24 * 1000 * 60 * 60, //7 days
         httpOnly: false,
         secure: false,
         sameSite: "strict",

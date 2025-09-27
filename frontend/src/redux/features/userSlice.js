@@ -28,9 +28,21 @@ export const userSlice = createSlice({
       state.loginAt = null;
       localStorage.removeItem("user");
     },
+    addAddress: (state, { payload }) => {
+      if (state.data) {
+        state.data.shipping_address = [...payload];
+      }
+      localStorage.setItem("user", JSON.stringify(state));
+    },
+    removeAddress: (state, { payload }) => {
+      if (state.data) {
+        state.data.shipping_address.splice(payload, 1);
+      }
+      localStorage.setItem("user", JSON.stringify(state));
+    },
   },
 });
 
-export const { userLogin, userAdd, userAddressAdd, clearUser } =
+export const { userLogin, userAdd, addAddress, clearUser, removeAddress } =
   userSlice.actions;
 export default userSlice.reducer;

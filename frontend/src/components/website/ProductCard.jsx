@@ -10,7 +10,7 @@ function ProductCard({ product }) {
   return (
     <div className=" bg-white border border-gray-200 rounded-lg shadow-sm relative ">
       {/* Product Image */}
-      <Link href="" className=" flex justify-center">
+      <Link href={`/product-view/${product._id}`} className=" flex justify-center">
         <img
           className="rounded-t-lg w-full h-[250px] object-contain"
           src={`${process.env.NEXT_PUBLIC_API__BASE_URL}/image/product/${product.thumbnail}`}
