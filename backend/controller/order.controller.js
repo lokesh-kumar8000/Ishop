@@ -50,7 +50,7 @@ const orderController = {
       const id = req.params.id;
       let orderList = null;
       if (id == null) {
-        orderList = await orderModel.find();
+        orderList = await orderModel.find().populate("user_id", "name _id");
       } else {
         orderList = await orderModel.find({
           user_id: new mongoose.Types.ObjectId(id),
@@ -59,6 +59,23 @@ const orderController = {
       if (orderList) {
         return successResponse(res, "Order List Found", orderList);
       }
+    } catch (error) {
+      console.log(error);
+      errorResponse(res);
+    }
+  },
+  async removeOrder(req, res) {
+    try {
+      const { orderId, userId } = req.params;
+
+      await orderModel.deleteOne({
+        user_id: new mongoose.Types.ObjectId(userId),
+        _id: new mongoose.Types.ObjectId(orderId),
+      });
+      const order = await orderModel.find({
+        user_id: new mongoose.Types.ObjectId(userId),
+      });
+      return successResponse(res, "Order Cencel", order);
     } catch (error) {
       console.log(error);
       errorResponse(res);

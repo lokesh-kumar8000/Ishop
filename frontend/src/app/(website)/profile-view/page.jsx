@@ -1,6 +1,7 @@
 "use client";
 import { axioIsnstance, notify } from "@/library/helper";
 import { clearCart } from "@/redux/features/cartSlice";
+import Swal from "sweetalert2";
 import {
   addAddress,
   clearUser,
@@ -19,8 +20,8 @@ export default function AccountInfoPage() {
   const [showFrom, setShowFrom] = useState(false);
   const [users, setUser] = useState([]);
   const [order, setOrder] = useState([]);
-  const router = useRouter(); 
-  const dispatcher = useDispatch(); 
+  const router = useRouter();
+  const dispatcher = useDispatch();
 
   // get Address
   useEffect(() => {
@@ -143,6 +144,31 @@ export default function AccountInfoPage() {
     dispatcher(clearUser());
   }
 
+  function removeAddress(orderId) {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axioIsnstance
+          .delete(`order/remove-oder/${user?.data?._id}/${orderId}`)
+          .then((response) => {
+            setOrder(response.data.data);
+            notify(response.data.message, response.data.success);
+          })
+          .catch((err) => {
+            console.log(err);
+            notify(err.response.data.message, err.response.data.success);
+          });
+      }
+    });
+  }
+
   if (!user) {
     return <p>Loading...</p>;
   }
@@ -256,47 +282,73 @@ export default function AccountInfoPage() {
                 <h1 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
                   My Orders
                 </h1>
-                <div className="flex flex-col gap-4 sm:gap-6">
-                  {order.map((ord, i) => (
-                    <div
-                      key={i}
-                      className="border rounded-xl p-4 sm:p-6 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
-                    >
-                      <div>
-                        <h2 className="font-semibold text-base sm:text-lg">
-                          Order #{ord._id}
-                        </h2>
-                        <p className="text-gray-500 text-xs sm:text-sm">
-                          Placed on: { new Date(ord.createdAt).toLocaleString()}
-                        </p>
-                        <p className="text-gray-500 text-xs sm:text-sm">
-                          Status:{" "}
-                          <span
-                            className={`font-medium ${
-                              ord.order_status == "0"
-                                ? "text-green-600"
-                                : ord.order_status === "1"
-                                ? "text-yellow-600"
-                                : "text-red-600"
-                            }`}
-                          >
-                            { ord.order_status == "0"
+                {order.length > 0 ? (
+                  <div className="flex flex-col gap-4 sm:gap-6">
+                    {order.map((ord, i) => (
+                      <div
+                        key={i}
+                        className="border rounded-xl p-4 sm:p-6 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+                      >
+                        <div>
+                          <h2 className="font-semibold text-base sm:text-lg">
+                            Order #{ord._id}
+                          </h2>
+                          <p className="text-gray-500 text-xs sm:text-sm">
+                            Placed on:{" "}
+                            {new Date(ord.createdAt).toLocaleString()}
+                          </p>
+                          <p className="text-gray-500 text-xs sm:text-sm">
+                            Status:{" "}
+                            <span
+                              className={`font-medium ${
+                                ord.order_status == "0"
+                                  ? "text-green-600"
+                                  : ord.order_status === "1"
+                                  ? "text-yellow-600"
+                                  : "text-red-600"
+                              }`}
+                            >
+                              {ord.order_status == "0"
                                 ? "Delivery"
                                 : ord.order_status === "1"
                                 ? "Shipped"
                                 : " Cancel "}
-                          </span>
-                        </p>
+                            </span>
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold">₹{ord.order_total}</p>
+                          <button
+                            onClick={() => removeAddress(ord._id)}
+                            className="mt-1 sm:mt-2 text-xs sm:text-sm rounded-2xl py-1.5 px-2 text-white  bg-red-600 cursor-pointer border "
+                          >
+                            Cencel Order
+                          </button>
+                        </div>
                       </div>
-                      <div className="text-right">
-                        <p className="font-semibold">₹{ord.order_total}</p>
-                        <button className="mt-1 sm:mt-2 text-xs sm:text-sm text-teal-600 hover:underline">
-                          View Details
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center text-center mt-20">
+                    <img
+                      src="/images/notOrder.jpg" // dummy image use kar sakte ho
+                      alt="No Orders"
+                      className="w-60 h-60 object-contain mb-6"
+                    />
+                    <h2 className="text-xl font-semibold mb-2">
+                      No Orders Yet
+                    </h2>
+                    <p className="text-gray-500 mb-6">
+                      You haven’t placed any orders yet. Start shopping now!
+                    </p>
+                    <Link
+                      href="/store"
+                      className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    >
+                      Continue Shopping
+                    </Link>
+                  </div>
+                )}
               </div>
             ) : (
               <NotLogIn />
