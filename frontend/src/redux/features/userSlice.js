@@ -34,7 +34,7 @@ export const userSlice = createSlice({
       }
       localStorage.setItem("user", JSON.stringify(state));
     },
-    removeAddress: (state, { payload }) => {
+    removeAddres: (state, { payload }) => {
       if (state.data) {
         state.data.shipping_address.splice(payload, 1);
       }
@@ -43,6 +43,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { userLogin, userAdd, addAddress, clearUser, removeAddress } =
+export const { userLogin, userAdd, addAddress, clearUser, removeAddres } =
   userSlice.actions;
 export default userSlice.reducer;

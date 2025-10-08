@@ -17,7 +17,7 @@ export default function CartPage({ products }) {
     if (user) {
       router.push("/checkout");
     } else {
-      router.push("/user-login");
+      router.push("/user-login?ref=checkout");
     }
   }
 
@@ -193,7 +193,7 @@ export default function CartPage({ products }) {
           </div>
           <button
             onClick={checkoutHandler}
-            className="mt-6 w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition"
+            className="mt-6 w-full cursor-pointer bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition"
           >
             CHECKOUT
           </button>

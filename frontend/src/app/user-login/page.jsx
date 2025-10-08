@@ -1,12 +1,14 @@
 "use client";
 import { axioIsnstance, notify } from "@/library/helper";
 import { userLogin } from "@/redux/features/userSlice";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 
 function LoginSignUpPage() {
+  const params = useSearchParams();
+  // console.log(params.get("ref"));
   const dispatcher = useDispatch();
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
@@ -36,7 +38,6 @@ function LoginSignUpPage() {
           });
           let final_total = 0;
           let original_total = 0;
-
           const items = updatedCart?.data?.data?.cart.map((prod) => {
             original_total += prod?.product_id?.originalPrice * prod.qty || 0;
             final_total += prod?.product_id?.finalPrice * prod.qty || 0;
@@ -51,7 +52,11 @@ function LoginSignUpPage() {
           );
 
           notify(response.data.message, response.data.success);
-          router.push("/");
+          if (params.get("ref") == "checkout") {
+            router.push("/checkout");
+          } else {
+            router.push("/");
+          }
         }
       })
       .catch((error) => {
@@ -96,9 +101,12 @@ function LoginSignUpPage() {
             "cart",
             JSON.stringify({ items, original_total, final_total })
           );
-
           notify(response.data.message, response.data.success);
-          router.push("/");
+          if (params.get("ref") == "checkout") {
+            router.push("/checkout");
+          } else {
+            router.push("/");
+          }
         }
       })
       .catch((error) => {

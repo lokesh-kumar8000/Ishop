@@ -1,7 +1,7 @@
 "use client";
 
 import CartBtn from "@/components/website/CartBtn";
-import { axioIsnstance } from "@/library/helper";
+import { axioIsnstance, formatIndianCurrency } from "@/library/helper";
 import { use, useEffect, useState } from "react";
 import { FaShoppingCart, FaBolt } from "react-icons/fa";
 
@@ -68,10 +68,10 @@ export default function ProductPage({ params }) {
           {/* Price Section */}
           <div className="flex items-center gap-3 flex-wrap">
             <span className="text-xl sm:text-2xl font-bold text-blue-600">
-              ₹{product.finalPrice}
+              {formatIndianCurrency(product.finalPrice)}
             </span>
             <span className="line-through text-gray-400 text-sm sm:text-base">
-              ₹{product.originalPrice}
+              {formatIndianCurrency(product.originalPrice)}
             </span>
             <span className="text-green-600 font-medium text-sm sm:text-base">
               {product.discountPercentage}% Off

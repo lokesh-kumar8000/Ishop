@@ -2,9 +2,10 @@
 
 import { FaCheckCircle } from "react-icons/fa";
 import Link from "next/link";
+import React from "react";
 
 export default function ThankYouPage({ params }) {
-  const { orderId } = params;
+   const { orderId } = React.use(params); 
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50 p-6">

@@ -1,11 +1,11 @@
 "use client";
-import { axioIsnstance, notify } from "@/library/helper";
+import { axioIsnstance, formatIndianCurrency, notify } from "@/library/helper";
 import { clearCart } from "@/redux/features/cartSlice";
 import Swal from "sweetalert2";
 import {
   addAddress,
   clearUser,
-  removeAddress,
+  removeAddres,
 } from "@/redux/features/userSlice";
 import { current } from "@reduxjs/toolkit";
 import Link from "next/link";
@@ -110,7 +110,9 @@ export default function AccountInfoPage() {
         setUser((prew) => {
           const updated = [...prew];
           updated.splice(index, 1);
-          dispatcher(removeAddress(index));
+          setTimeout(() => {
+            dispatcher(removeAddres(index));
+          }, 0);
           return updated;
         });
       })
@@ -140,8 +142,10 @@ export default function AccountInfoPage() {
   }
 
   function logOutHandler() {
-    dispatcher(clearCart());
-    dispatcher(clearUser());
+    setTimeout(() => {
+      dispatcher(clearCart());
+      dispatcher(clearUser());
+    }, 0);
   }
 
   function removeAddress(orderId) {
@@ -167,10 +171,6 @@ export default function AccountInfoPage() {
           });
       }
     });
-  }
-
-  if (!user) {
-    return <p>Loading...</p>;
   }
 
   return (
@@ -303,21 +303,23 @@ export default function AccountInfoPage() {
                               className={`font-medium ${
                                 ord.order_status == "0"
                                   ? "text-green-600"
-                                  : ord.order_status === "1"
+                                  : ord.order_status == "1"
                                   ? "text-yellow-600"
                                   : "text-red-600"
                               }`}
                             >
                               {ord.order_status == "0"
                                 ? "Delivery"
-                                : ord.order_status === "1"
+                                : ord.order_status == "1"
                                 ? "Shipped"
                                 : " Cancel "}
                             </span>
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="font-semibold">₹{ord.order_total}</p>
+                          <p className="font-semibold">
+                            {formatIndianCurrency(ord.order_total)}
+                          </p>
                           <button
                             onClick={() => removeAddress(ord._id)}
                             className="mt-1 sm:mt-2 text-xs sm:text-sm rounded-2xl py-1.5 px-2 text-white  bg-red-600 cursor-pointer border "
