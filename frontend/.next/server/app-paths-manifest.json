@@ -1,9 +1,8 @@
 {
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/_not-found/page": "app/_not-found/page.js",
-  "/(website)/thank-you/[orderId]/page": "app/(website)/thank-you/[orderId]/page.js",
   "/(website)/cart/page": "app/(website)/cart/page.js",
   "/(website)/checkout/page": "app/(website)/checkout/page.js",
+  "/(website)/thank-you/[orderId]/page": "app/(website)/thank-you/[orderId]/page.js",
   "/(website)/profile-view/page": "app/(website)/profile-view/page.js",
+  "/(admin-penal)/admin/page": "app/(admin-penal)/admin/page.js",
   "/(website)/store/page": "app/(website)/store/page.js"
 }

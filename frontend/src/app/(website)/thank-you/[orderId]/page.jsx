@@ -6,7 +6,7 @@ import React from "react";
 
 export default function ThankYouPage({ params }) {
    const { orderId } = React.use(params); 
-
+   console.log(orderId,'orderId');
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50 p-6">
       <div className="bg-white shadow-lg rounded-2xl p-8 text-center max-w-md">

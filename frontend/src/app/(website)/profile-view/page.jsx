@@ -491,38 +491,60 @@ export default function AccountInfoPage() {
                     {/* address list */}
                     <h1 className="text-2xl font-semibold mb-6">My Address</h1>
                     {/* Address List */}
-                    {users.map((address, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="p-4 border rounded-lg bg-gray-50 mt-3.5 "
-                        >
-                          <h3 className="text-lg font-semibold mb-2">
-                            Delivery Address
-                          </h3>
-                          <p className="text-sm text-gray-700">
-                            {address.addressLine1}
-                            {address.addressLine2 &&
-                              `, ${address.addressLine2}`}
-                          </p>
-                          <p className="text-sm text-gray-700">
-                            {address.city}, {address.state}
-                          </p>
-                          <p className="text-sm text-gray-700">
-                            {address.country} , {address.postCode}
-                          </p>
+                    {users && users.length > 0 ? (
+                      users.map((address, index) => {
+                        return (
+                          <div
+                            key={index}
+                            className="p-4 border rounded-lg bg-gray-50 mt-3.5 "
+                          >
+                            <h3 className="text-lg font-semibold mb-2">
+                              Delivery Address
+                            </h3>
+                            <p className="text-sm text-gray-700">
+                              {address.addressLine1}
+                              {address.addressLine2 &&
+                                `, ${address.addressLine2}`}
+                            </p>
+                            <p className="text-sm text-gray-700">
+                              {address.city}, {address.state}
+                            </p>
+                            <p className="text-sm text-gray-700">
+                              {address.country}, {address.postCode}
+                            </p>
 
-                          <div className="mt-4 flex gap-3">
-                            <button
-                              onClick={() => deleteAddress(index)}
-                              className="text-sm bg-red-500 text-white px-4 py-1 rounded-lg cursor-pointer "
-                            >
-                              Delete
-                            </button>
+                            <div className="mt-4 flex gap-3">
+                              <button
+                                onClick={() => deleteAddress(index)}
+                                className="text-sm bg-red-500 text-white px-4 py-1 rounded-lg cursor-pointer"
+                              >
+                                Delete
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })
+                    ) : (
+                      <div className="flex flex-col items-center justify-center text-center mt-20">
+                        <img
+                          src="/images/notOrder.jpg" // dummy image use kar sakte ho
+                          alt="No address"
+                          className="w-60 h-60 object-contain mb-6"
+                        />
+                        <h2 className="text-xl font-semibold mb-2">
+                          No address Yet
+                        </h2>
+                        <p className="text-gray-500 mb-6">
+                          You haven’t placed any orders yet. Start shopping now!
+                        </p>
+                        <button
+                         onClick={() => setShowFrom(!showFrom)}
+                          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer "
+                        >
+                          Add address
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
                 <p className=" text-sm text-gray-600 py-2 ">
@@ -613,13 +635,13 @@ const NotLogIn = () => {
 
         <div className="flex flex-col space-y-3">
           <Link
-            href={"/user-login"}
+            href={"/user-login?ref=profile-view"}
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg transition duration-300"
           >
             Login
           </Link>
           <Link
-            href={"/user-login"}
+            href={"/user-login?ref=profile-view"}
             className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-lg transition duration-300"
           >
             Signup

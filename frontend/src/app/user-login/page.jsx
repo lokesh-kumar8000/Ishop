@@ -2,9 +2,9 @@
 import { axioIsnstance, notify } from "@/library/helper";
 import { userLogin } from "@/redux/features/userSlice";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function LoginSignUpPage() {
   const params = useSearchParams();
@@ -14,8 +14,24 @@ function LoginSignUpPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const toggleForm = () => setIsLogin(!isLogin);
+  const user = JSON.parse(localStorage.getItem("user"));
+  // console.log(user, "user");
 
   const cart = JSON.parse(localStorage.getItem("cart"));
+  useEffect(() => {
+    if (user) {
+      if (params.get("ref") == "checkout") {
+        router.push("/checkout");
+      } else if (params.get("ref") == "profile-view") {
+        router.push("/profile-view");
+      } else {
+        router.push("/");
+      }
+      notify("You are logIn", true);
+    } else {
+      router.push("/user-login");
+    }
+  }, [user]);
   function logInSubmit(e) {
     e.preventDefault();
     const data = {
@@ -54,6 +70,8 @@ function LoginSignUpPage() {
           notify(response.data.message, response.data.success);
           if (params.get("ref") == "checkout") {
             router.push("/checkout");
+          } else if (params.get("ref") == "profile-view") {
+            router.push("/profile-view");
           } else {
             router.push("/");
           }
@@ -104,6 +122,8 @@ function LoginSignUpPage() {
           notify(response.data.message, response.data.success);
           if (params.get("ref") == "checkout") {
             router.push("/checkout");
+          } else if (params.get("ref") == "profile-veiw") {
+            router.push("/profile-veiw");
           } else {
             router.push("/");
           }
