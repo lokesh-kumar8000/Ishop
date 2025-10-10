@@ -120,9 +120,9 @@ const orderController = {
       if (id == null) {
         orderList = await orderModel.find().populate("user_id", "name _id");
       } else {
-        orderList = await orderModel.find({
-          user_id: new mongoose.Types.ObjectId(id),
-        });
+        orderList = await orderModel
+          .find({ _id: id })
+          .populate("user_id", "name _id");
       }
       if (orderList) {
         return successResponse(res, "Order List Found", orderList);

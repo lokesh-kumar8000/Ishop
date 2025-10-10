@@ -47,11 +47,11 @@ const category = {
   async get(req, res) {
     try {
       const id = req.params.id;
-      let allCategory = null; 
+      let allCategory = null;
       if (id) {
-        allCategory = await categoryModel.findById(id); 
+        allCategory = await categoryModel.findById(id);
       } else {
-        allCategory = await categoryModel.find();
+        allCategory = await categoryModel.find().limit(3);
 
         const data = await Promise.all(
           allCategory.map(async (cat) => {

@@ -1,4 +1,5 @@
 "use client";
+import { FaShoppingCart } from "react-icons/fa";
 import { axioIsnstance, notify } from "@/library/helper";
 import { incDec, removeCart } from "@/redux/features/cartSlice";
 import { useRouter } from "next/navigation";
@@ -11,11 +12,15 @@ export default function CartPage({ products }) {
   const dispatcher = useDispatch();
   const cart = useSelector((state) => state.cart);
   const user = useSelector((state) => state.user.data);
-  // console.log(user, "user");
+  // console.log(cart, "cart");
 
   function checkoutHandler() {
     if (user) {
-      router.push("/checkout");
+      if (!cart.items || cart?.items.length === 0) {
+        router.push("/store");
+      } else {
+        router.push("/checkout");
+      }
     } else {
       router.push("/user-login?ref=checkout");
     }
@@ -80,7 +85,7 @@ export default function CartPage({ products }) {
           productId,
           original_total,
           final_total,
-        }) 
+        })
       );
     }
   }
@@ -90,85 +95,103 @@ export default function CartPage({ products }) {
       <div className=" mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Section - Cart Items */}
         <div className="lg:col-span-2 space-y-4">
-          {cart?.items?.map((item) => {
-            const product = products.find(
-              (prod) => prod._id === item.productId
-            );
-            return (
-              <div
-                key={product._id}
-                className="flex items-center gap-4 bg-white rounded-2xl shadow p-4"
-              >
-                {/* Image + Tag */}
-                <div className="relative">
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_API__BASE_URL}/image/product/${product.thumbnail}`}
-                    alt={product.name}
-                    className="w-24 h-28 object-contain rounded-lg"
-                  />
-                </div>
+          {cart?.items?.length !== 0 ? (
+            cart?.items?.map((item) => {
+              const product = products.find(
+                (prod) => prod._id === item.productId
+              );
+              return (
+                <div
+                  key={product._id}
+                  className="flex items-center gap-4 bg-white rounded-2xl shadow p-4"
+                >
+                  {/* Image + Tag */}
+                  <div className="relative">
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_API__BASE_URL}/image/product/${product.thumbnail}`}
+                      alt={product.name}
+                      className="w-24 h-28 object-contain rounded-lg"
+                    />
+                  </div>
 
-                {/* Info */}
-                <div className="flex-1">
-                  <div className=" flex justify-between items-center ">
-                    <div>
-                      <h3 className="font-semibold text-sm text-gray-700">
-                        {product.name}
-                      </h3>
-                      <p className="text-red-600 font-bold text-lg">
-                        ₹{product.finalPrice * item.qty}
-                      </p>
+                  {/* Info */}
+                  <div className="flex-1">
+                    <div className=" flex justify-between items-center ">
+                      <div>
+                        <h3 className="font-semibold text-sm text-gray-700">
+                          {product.name}
+                        </h3>
+                        <p className="text-red-600 font-bold text-lg">
+                          ₹{product.finalPrice * item.qty}
+                        </p>
 
-                      {/* Quantity */}
-                      <div className="flex items-center gap-2 mt-2">
-                        <button
-                          onClick={() =>
-                            updateCart({
-                              flag: "-",
-                              productId: product._id,
-                              original_total: product.originalPrice,
-                              final_total: product.finalPrice,
-                            })
-                          }
-                          className="w-7 h-7 flex items-center justify-center border rounded-md hover:bg-gray-100"
-                        >
-                          <FaMinus size={12} />
-                        </button>
-                        <span className="px-2"> {item.qty} </span>
-                        <button
-                          onClick={() =>
-                            updateCart({
-                              flag: "+",
-                              productId: product._id,
-                              original_total: product.originalPrice,
-                              final_total: product.finalPrice,
-                            })
-                          }
-                          className="w-7 h-7 flex items-center justify-center border rounded-md hover:bg-gray-100"
-                        >
-                          <FaPlus size={12} />
-                        </button>
+                        {/* Quantity */}
+                        <div className="flex items-center gap-2 mt-2">
+                          <button
+                            onClick={() =>
+                              updateCart({
+                                flag: "-",
+                                productId: product._id,
+                                original_total: product.originalPrice,
+                                final_total: product.finalPrice,
+                              })
+                            }
+                            className="w-7 h-7 flex items-center justify-center border rounded-md hover:bg-gray-100"
+                          >
+                            <FaMinus size={12} />
+                          </button>
+                          <span className="px-2"> {item.qty} </span>
+                          <button
+                            onClick={() =>
+                              updateCart({
+                                flag: "+",
+                                productId: product._id,
+                                original_total: product.originalPrice,
+                                final_total: product.finalPrice,
+                              })
+                            }
+                            className="w-7 h-7 flex items-center justify-center border rounded-md hover:bg-gray-100"
+                          >
+                            <FaPlus size={12} />
+                          </button>
+                        </div>
                       </div>
+                      <button
+                        onClick={() =>
+                          removeHandler(
+                            product._id,
+                            item.qty,
+                            product.originalPrice,
+                            product.finalPrice
+                          )
+                        }
+                        className=" bg-red-600 text-white px-3 py-2 rounded-[10px] cursor-pointer "
+                      >
+                        {" "}
+                        Remove{" "}
+                      </button>
                     </div>
-                    <button
-                      onClick={() =>
-                        removeHandler(
-                          product._id,
-                          item.qty,
-                          product.originalPrice,
-                          product.finalPrice
-                        )
-                      }
-                      className=" bg-red-600 text-white px-3 py-2 rounded-[10px] cursor-pointer "
-                    >
-                      {" "}
-                      Remove{" "}
-                    </button>
                   </div>
                 </div>
+              );
+            })
+          ) : (
+            <div className="flex flex-col items-center justify-center min-h-[70vh] text-center px-4">
+              <div className="text-6xl text-gray-400 mb-4">
+                <FaShoppingCart />
               </div>
-            );
-          })}
+              <h2 className="text-2xl font-bold mb-2">Your Cart is Empty</h2>
+              <p className="text-gray-500 mb-6">
+                Looks like you haven’t added any products yet.
+              </p>
+              <button
+                onClick={() => router.push("/store")}
+                className=" cursor-pointer px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              >
+                Shop Now
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Right Section - Order Summary */}
