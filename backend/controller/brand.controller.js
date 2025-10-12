@@ -47,11 +47,12 @@ const brand = {
   async read(req, res) {
     try {
       const id = req.params.id;
+      const limit = parseInt(req.query.limit);
       let allbrand = null;
       if (id) {
         allbrand = await brandModel.findById(id);
       } else {
-        allbrand = await brandModel.find();
+        allbrand = await brandModel.find().limit(limit);
 
         const data = await Promise.all(
           allbrand.map(async (brand) => {
@@ -60,8 +61,8 @@ const brand = {
             });
             return {
               ...brand.toObject(),
-              brandCount, 
-            }; 
+              brandCount,
+            };
           })
         );
         return createdSuccess(res, "find brand ", data);

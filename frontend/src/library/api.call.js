@@ -1,10 +1,11 @@
 import { axioIsnstance } from "./helper";
 
-const getCategory = async (id = null) => {
+const getCategory = async (id = null, limit = null) => {
   try {
+    // console.log(limit, "limit");
     let api = "category";
     if (id != null) api += `/${id}`;
-    const response = await axioIsnstance.get(api);
+    const response = await axioIsnstance.get(api, { params: { limit } });
     if (response.data.success) {
       return response.data;
     } else {
@@ -43,11 +44,11 @@ const getProducts = async (
   }
 };
 
-const getBrand = async (id = null) => {
+const getBrand = async (id = null, limit = null) => {
   try {
     let api = "brand";
     if (id != null) api += `/${id}`;
-    const response = await axioIsnstance.get(api);
+    const response = await axioIsnstance.get(api, { params: { limit } });
     if (response.data.success) {
       return response.data;
     } else {

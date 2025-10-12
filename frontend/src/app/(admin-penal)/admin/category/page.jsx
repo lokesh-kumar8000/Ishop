@@ -1,14 +1,31 @@
+"use client";
 import { getCategory } from "@/library/api.call";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import StatusBtn from "@/components/admin/StatusBtn";
 import DeleteBtn from "@/components/admin/DeleteBtn";
 
- async function CategoryTable() {
-  const allData = await getCategory();
-  const categories = allData.data 
+function CategoryTable() {
+  const [categories, setCategories] = useState([]);
+  const [showAll, setShowAll] = useState(false);
+  async function getcat(limit) {
+    const allData = await getCategory(null, limit);
+    setCategories(allData.data);
+  }
+  useEffect(() => {
+    getcat(5);
+  }, []);
 
- 
+  function limitHandler() {
+    if (showAll) {
+      getcat(5);
+      setShowAll(false);
+    } else {
+      getcat();
+      setShowAll(true);
+    }
+  }
+
   return (
     <div className="p-6">
       {/* Header with Add Button */}
@@ -38,30 +55,36 @@ import DeleteBtn from "@/components/admin/DeleteBtn";
               <tr key={index} className="border-t hover:bg-gray-50">
                 <td className="px-4 py-2">
                   <img
-                    src={`${process.env.NEXT_PUBLIC_API__BASE_URL}/image/category/${cat.image}`} 
-                    alt={cat.name} 
+                    src={`${process.env.NEXT_PUBLIC_API__BASE_URL}/image/category/${cat.image}`}
+                    alt={cat.name}
                     className="w-12 h-12 rounded-lg object-cover"
                   />
                 </td>
                 <td className="px-4 py-2">{cat.name}</td>
                 <td className="px-4 py-2">{cat.slug}</td>
                 <td className="px-4 py-2">
-                  <StatusBtn url='category' id={cat._id} status={cat.status} /> 
+                  <StatusBtn url="category" id={cat._id} status={cat.status} />
                 </td>
-                <td className=" flex px-4 py-2 gap-3.5 "> 
-                  <DeleteBtn url='category' id={cat._id} /> 
-                  <Link href={`/admin/category/edit/${cat._id}`} >
-                    <button
-                      className=" py-1 px-3 border-1 rounded-[10px] text-[14px] cursor-pointer "
-                    >
+                <td className=" flex px-4 py-2 gap-3.5 ">
+                  <DeleteBtn url="category" id={cat._id} />
+                  <Link href={`/admin/category/edit/${cat._id}`}>
+                    <button className=" py-1 px-3 border-1 rounded-[10px] text-[14px] cursor-pointer ">
                       Edit
-                    </button> 
+                    </button>
                   </Link>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+      </div>
+      <div className=" flex justify-center items-center my-5 ">
+        <button
+          onClick={limitHandler}
+          className=" bg-blue-600 text-white py-1.5 px-2.5 font-medium cursor-pointer "
+        >
+          {showAll ? "Show Less" : " View All "}
+        </button>
       </div>
     </div>
   );

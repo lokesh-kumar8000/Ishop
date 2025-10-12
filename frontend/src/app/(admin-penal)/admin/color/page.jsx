@@ -12,7 +12,7 @@ import React from "react";
     <div className="p-6">
       {/* Header with Add Button */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Category List</h2>
+        <h2 className="text-xl font-semibold">Color List</h2>
         <Link href="/admin/color/add">
           <button className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition cursor-pointer ">
             + Add Color

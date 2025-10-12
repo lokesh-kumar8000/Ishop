@@ -1,11 +1,32 @@
+"use client";
 import DeleteBtn from "@/components/admin/DeleteBtn";
 import StatusBtn from "@/components/admin/StatusBtn";
 import { getBrand } from "@/library/api.call";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-async function BrandTable() {
-  const allData = await getBrand();
-  const brands = allData.data;
+function BrandTable() {
+  const [brands, setBrands] = useState([]);
+  const [showAll, setShowAll] = useState(false);
+
+  async function getbrands(limit) {
+    const allData = await getBrand(null, limit);
+    setBrands(allData.data);
+  }
+
+  useEffect(() => {
+    getbrands(5);
+  }, []);
+
+  function limitHandler() {
+    if (showAll) {
+      getbrands(5);
+      setShowAll(false);
+    } else {
+      getbrands();
+      setShowAll(true);
+    }
+  }
 
   return (
     <div className="p-6">
@@ -58,6 +79,14 @@ async function BrandTable() {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className=" flex justify-center items-center my-5 ">
+        <button
+          onClick={limitHandler}
+          className=" bg-blue-600 text-white py-1.5 px-2.5 font-medium cursor-pointer "
+        >
+          {showAll ? "Show Less" : " View All "}
+        </button>
       </div>
     </div>
   );

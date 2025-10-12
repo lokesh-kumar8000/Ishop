@@ -6,7 +6,7 @@ import React, { useState } from "react";
 
 function StatusBtn({ id, status , url }) {
   const token = getCookie('admin_token')
-  console.log(token,'token');
+  // console.log(token,'token');
   const router = useRouter();
   const [currentStatus, setCurrentStatus] = useState(status);
 

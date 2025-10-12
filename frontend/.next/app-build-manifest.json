@@ -1,3 +1,53 @@
 {
-  "pages": {}
+  "pages": {
+    "/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/layout.css",
+      "static/chunks/app/layout.js"
+    ],
+    "/loading": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/loading.js"
+    ],
+    "/not-found": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/not-found.js"
+    ],
+    "/(website)/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/(website)/layout.css",
+      "static/chunks/app/(website)/layout.js"
+    ],
+    "/(website)/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/(website)/page.css",
+      "static/chunks/app/(website)/page.js"
+    ],
+    "/(admin-penal)/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/(admin-penal)/layout.css",
+      "static/chunks/app/(admin-penal)/layout.js"
+    ],
+    "/(admin-penal)/admin/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(admin-penal)/admin/page.js"
+    ],
+    "/(admin-penal)/admin/brand/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(admin-penal)/admin/brand/page.js"
+    ],
+    "/(admin-penal)/admin/product/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(admin-penal)/admin/product/page.js"
+    ]
+  }
 }
