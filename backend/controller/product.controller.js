@@ -50,8 +50,19 @@ const product = {
   },
   async read(req, res) {
     try {
-      const { categorySlug, brandSlug, colorSlug, min, max } = req.query;
+      const {
+        categorySlug,
+        brandSlug,
+        colorSlug,
+        min,
+        max,
+        limit,
+        currentPage,
+      } = req.query;
       const id = req.params.id;
+
+      let skip = (currentPage - 1) * limit;
+      console.log(skip, "skip");
       const filterQuery = {};
       if (categorySlug) {
         const category = await categoryModal.findOne({ slug: categorySlug });
@@ -78,7 +89,6 @@ const product = {
           $lte: max,
         };
       }
-      console.log(filterQuery);
       let product = null;
       if (id) {
         product = await productModal
@@ -88,13 +98,22 @@ const product = {
         product = await productModal
           .find(filterQuery)
           .populate(["categoryId", "brandId", "colors"])
-          .limit(20);
+          .skip(skip)
+          .limit(limit);
       }
 
       if (!product) {
         bedResponse(res, "product not exist");
       }
-      return successResponse(res, "product find", product);
+      const totalProduct = await productModal.countDocuments();
+      return res.status(200).json({
+        success: true,
+        status: "success",
+        message: "product find",
+        timestamp: new Date().toISOString(),
+        data: product,
+        total_product: totalProduct,
+      });
     } catch (error) {
       console.log(error);
       errorResponse(res, error);
@@ -209,3 +228,4 @@ const product = {
 };
 
 module.exports = product;
+2;

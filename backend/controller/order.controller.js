@@ -113,15 +113,36 @@ const orderController = {
       errorResponse(res);
     }
   },
+  // order get by id
   async orderGet(req, res) {
     try {
-      const id = req.params.id;
+      const { id } = req.params;
       let orderList = null;
       if (id == null) {
         orderList = await orderModel.find().populate("user_id", "name _id");
       } else {
         orderList = await orderModel
           .find({ _id: id })
+          .populate("user_id", "name _id");
+      }
+      if (orderList) {
+        return successResponse(res, "Order List Found", orderList);
+      }
+    } catch (error) {
+      console.log(error);
+      errorResponse(res);
+    }
+  },
+  // order get by user id
+  async orderGetByUser(req, res) {
+    try {
+      const { user_id } = req.params;
+      let orderList = null;
+      if (user_id == null) {
+        orderList = await orderModel.find().populate("user_id", "name _id");
+      } else {
+        orderList = await orderModel
+          .find({ user_id: user_id })
           .populate("user_id", "name _id");
       }
       if (orderList) {

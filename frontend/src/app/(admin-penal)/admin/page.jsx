@@ -15,7 +15,6 @@ export default function ContentPage() {
       .get(`order/get/${search}`)
       .then((response) => {
         setOrders(response.data.data);
-        // let order = response.data.data;
         let total = 0;
         response?.data?.data.map((order) => (total += order?.order_total));
         setSales(total);

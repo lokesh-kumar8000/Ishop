@@ -2,7 +2,6 @@
 import { getProducts } from "@/library/api.call";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import StatusBtn from "@/components/admin/StatusBtn";
 import ProductStock from "@/components/admin/ProductStock";
 import DeleteBtn from "@/components/admin/DeleteBtn";
 import { RxCross1 } from "react-icons/rx";
@@ -12,15 +11,30 @@ function ProductTable() {
   const [product, setProduct] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
-  const [ids, setIds] = useState(false);
+  const [ids, setIds] = useState(false); 
+  const [pages, setPages] = useState(0); 
+  const [currentPage, setCurrentPage] = useState(0); 
+  let limit = 2;
   useEffect(() => {
     const fetchData = async () => {
-      const allData = await getProducts();
+      const allData = await getProducts(null ,null,null,null,null,null,limit,currentPage);
       setProduct(allData.data);
+      setPages(Math.ceil(allData.total_product / limit));
     };
     fetchData();
-  }, [ids]);
+  }, [ids,currentPage]);
 
+  let pagination = [];
+
+  for (let i = 1; i <= pages; i++) {
+    pagination.push(
+      <button key={i} onClick={()=>setCurrentPage(i)} className=" px-4 py-2 border cursor-pointer ">
+        {" "}
+        {i}{" "}
+      </button>
+    );
+  }
+// console.log(currentPage,limit);
   return (
     <div className="p-6 ">
       {/* Header with Add Button */}
@@ -72,9 +86,7 @@ function ProductTable() {
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
                     {/* <StatusBtn url="product" id={pro._id} status={pro.status} /> */}
-                    <ProductStock
-                      product = {pro}
-                    />
+                    <ProductStock product={pro} />
                   </div>
                 </td>
 
@@ -119,6 +131,10 @@ function ProductTable() {
             ))}
           </tbody>
         </table>
+        {/* pagination  */}
+        <div className=" my-5 flex justify-center items-center ">
+          <div>{pagination}</div>
+        </div>
       </div>
     </div>
   );
@@ -127,7 +143,7 @@ function ProductTable() {
 export default ProductTable;
 
 function ProductView({ product, onClose }) {
-  const [img,setImg] = useState(product.thumbnail)
+  const [img, setImg] = useState(product.thumbnail);
   return (
     <motion.div
       initial={{ x: "-100%", opacity: 0 }} // 👈 Start from left
@@ -158,8 +174,8 @@ function ProductView({ product, onClose }) {
                 key={i}
                 src={`${process.env.NEXT_PUBLIC_API__BASE_URL}/image/product/${img}`}
                 alt="gallery"
-                onMouseOver={()=>setImg(img)}
-                onMouseLeave={() => setImg(product.thumbnail)} 
+                onMouseOver={() => setImg(img)}
+                onMouseLeave={() => setImg(product.thumbnail)}
                 className="w-24 h-24 object-contain rounded border cursor-pointer hover:scale-105 transition"
               />
             ))}
@@ -194,10 +210,15 @@ function ProductView({ product, onClose }) {
             </li>
             <li>
               <strong>Colors:</strong>{" "}
-              <div className=" flex gap-2.5 " >
-              {product.colors?.map((name,i) => {
-                return <p key={i} style={{ backgroundColor: name.name }}> {name.name} </p>;
-              })}
+              <div className=" flex gap-2.5 ">
+                {product.colors?.map((name, i) => {
+                  return (
+                    <p key={i} style={{ backgroundColor: name.name }}>
+                      {" "}
+                      {name.name}{" "}
+                    </p>
+                  );
+                })}
               </div>
             </li>
             <li>

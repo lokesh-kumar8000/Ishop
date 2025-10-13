@@ -7,7 +7,7 @@ import {
   clearUser,
   removeAddres,
 } from "@/redux/features/userSlice";
-import { current } from "@reduxjs/toolkit";
+// import { current } from "@reduxjs/toolkit";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -38,9 +38,10 @@ export default function AccountInfoPage() {
   // get order
   useEffect(() => {
     axioIsnstance
-      .get(`order/get/${user?.data?._id}`)
+      .get(`order/getUser/${user?.data?._id}`)
       .then((response) => {
         setOrder(response.data.data);
+
       })
       .catch((error) => {
         console.log(error);
@@ -538,7 +539,7 @@ export default function AccountInfoPage() {
                           You haven’t placed any orders yet. Start shopping now!
                         </p>
                         <button
-                         onClick={() => setShowFrom(!showFrom)}
+                          onClick={() => setShowFrom(!showFrom)}
                           className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer "
                         >
                           Add address
