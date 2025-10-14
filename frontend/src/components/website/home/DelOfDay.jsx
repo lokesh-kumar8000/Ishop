@@ -1,7 +1,26 @@
-import React from "react";
+"use client";
+import { getProducts } from "@/library/api.call";
+import { formatIndianCurrency } from "@/library/helper";
+import React, { useEffect, useState } from "react";
 import { FaHeart } from "react-icons/fa";
+import CartBtn from "../CartBtn";
 
 function DelOfDay() {
+  const [product, setProduct] = useState({});
+  // console.log(Math.floor(Math.random() * 10));
+
+  async function getproduct() {
+    const productJSON = await getProducts();
+    const products = productJSON.data;
+    let limit = Math.floor(Math.random() * products.length - 1);
+    // console.log(products[limit]);
+    setProduct(products[limit]);
+  }
+
+  useEffect(() => {
+    getproduct();
+  }, []);
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
       {/* left section */}
@@ -17,23 +36,33 @@ function DelOfDay() {
         <div className="px-4 sm:px-5 py-6 sm:py-[50px] flex flex-col lg:flex-row items-center gap-6 lg:gap-9 bg-white rounded-[10px]">
           {/* left images */}
           <div className="flex gap-3 w-full lg:w-1/2">
-            <div className="flex flex-col gap-3 lg:gap-5 justify-center items-center">
-              <img src="/images/home/deals1.png" className="h-[60px] w-[35px]" alt="" />
-              <img src="/images/home/deals2.png" className="h-[60px] w-[35px]" alt="" />
-              <img src="/images/home/deals3.png" className="h-[60px] w-[35px]" alt="" />
-              <img src="/images/home/deals4.png" className="h-[60px] w-3" alt="" />
-            </div>
+            <div className="flex flex-col gap-3 mt-3 overflow-x-auto sm:overflow-visible">
+            {product?.images?.map((image, i) => (
+              <img
+                key={i}
+                src={`${process.env.NEXT_PUBLIC_API__BASE_URL}/image/product/${image}`}
+                alt="gallery"
+                // onMouseOver={() => setImge(image)}
+                // onMouseLeave={() => setImge(product.thumbnail)}
+                className="w-20 h-20 sm:w-24 sm:h-24 object-contain rounded border cursor-pointer hover:scale-105 transition"
+              />
+            ))}
+          </div>
             <div className="flex-1">
               <div className="flex justify-center items-center relative">
-                <img src="/images/home/deals1.png" className="h-[200px] sm:h-[280px]" alt="" />
+                <img
+                  src={`${process.env.NEXT_PUBLIC_API__BASE_URL}/image/product/${product?.thumbnail}`}
+                  className="rounded-2xl max-h-[400px] w-full object-contain sm:max-h-[500px]"
+                  alt=""
+                />
                 <div className="h-8 w-8 bg-[#EBEDF3] rounded-full absolute top-0 right-4 sm:right-[50px] text-red-600 flex justify-center items-center">
                   <FaHeart />
                 </div>
-                <div className="bg-[#01A49E] py-1.5 px-3 sm:py-2 sm:px-4 text-white rounded-[10px] absolute top-0 left-4 sm:left-8">
-                  <p className="text-[10px] sm:text-[12px] uppercase">save</p>
-                  <h5 className="text-[14px] sm:text-[18px] font-medium">
-                    $199.00
-                  </h5>
+                <div className=" absolute top-0 left-[20px] py-1.5 px-2  rounded-[10px] bg-[#e61515] text-white ">
+                  <p className=" text-[8px] uppercase ">OFF</p>
+                  <h6 className=" text-[10px] font-medium ">
+                    {product.discountPercentage}%
+                  </h6>
                 </div>
               </div>
             </div>
@@ -41,40 +70,37 @@ function DelOfDay() {
 
           {/* right content */}
           <div className="w-full lg:w-1/2">
-            <h2 className="font-bold text-sm sm:text-base leading-[19px]">
-              Xioma Redmi Note 11 Pro 256GB 2023, Black Smartphone
+            <h2 className="font-bold text-4xl uppercase sm:text-base leading-[19px]">
+              {product.name}
             </h2>
-            <div className="py-3 sm:py-4 flex items-center gap-3">
-              <h4 className="text-[#01A49E] text-[18px] sm:text-[22px] font-semibold">
-                $569.00
-              </h4>
-              <p className="text-[#666666] font-semibold line-through text-sm sm:text-base">
-                $759.00
-              </p>
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="text-xl sm:text-2xl font-bold text-blue-600">
+                {formatIndianCurrency(product.finalPrice)}
+              </span>
+              <span className="line-through text-gray-400 text-sm sm:text-base">
+                {formatIndianCurrency(product.originalPrice)}
+              </span>
+              <span className="text-green-600 font-medium text-sm sm:text-base">
+                {product.discountPercentage}% Off
+              </span>
             </div>
 
             {/* features */}
-            <ul className="list-disc pl-5 space-y-1">
-              <li className="text-[12px] leading-[20px]">
-                Intel LGA 1700 Socket: Supports 13th & 12th Gen Intel Core
-              </li>
-              <li className="text-[12px] leading-[20px]">
-                DDR5 Compatible: 4*SMD DIMMs with XMP 3.0 Memory
-              </li>
-              <li className="text-[12px] leading-[20px]">
-                Commanding Power Design: Twin 16+1+2 Phases Digital VRM
-              </li>
-            </ul>
+            <p className="text-gray-600 text-sm sm:text-base">
+              {product.shortDescription}
+            </p>
 
-            {/* badges */}
-            <div className="flex flex-wrap gap-3 sm:gap-7 my-6">
-              <button className="text-[#01A49E] px-3 py-1 bg-blue-100 rounded-full text-[12px] uppercase">
-                free shipping
-              </button>
-              <button className="text-[#01A49E] px-3 py-1 bg-blue-100 rounded-full text-[12px] uppercase">
-                free gift
-              </button>
-            </div>
+            <p
+              className={`font-semibold text-sm sm:text-base ${
+                product.stock ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              {product.stock ? "In Stock" : "Out of Stock"}
+            </p>
+            <div
+              className="prose max-w-none text-sm sm:text-base"
+              dangerouslySetInnerHTML={{ __html: product.longDescription }}
+            />
 
             {/* timer */}
             <div>
@@ -83,7 +109,7 @@ function DelOfDay() {
               </h2>
               <div className="flex gap-3 sm:gap-5 my-3">
                 <div className="bg-[#EBEDF3] rounded-[6px] px-2 py-3 sm:py-4 text-sm sm:text-base">
-                  162 D
+                 016 D
                 </div>
                 <div className="bg-[#EBEDF3] rounded-[6px] px-2 py-3 sm:py-4 text-sm sm:text-base">
                   -09 H
@@ -106,29 +132,35 @@ function DelOfDay() {
                 Sold: <strong>26/75</strong>
               </p>
             </div>
+            <div>
+              <CartBtn
+                finalPrice={product.finalPrice}
+                originalPrice={product.originalPrice}
+                productId={product._id}
+              />
+            </div>
           </div>
         </div>
       </div>
 
       {/* right section */}
-     <div className="flex flex-col sm:flex-row lg:flex-col gap-3.5 mr-2.5">
-  <img
-    src="/images/home/dealsr1.png"
-    className="rounded-[12px] w-full sm:w-1/3 lg:w-full h-[150px] sm:h-[177px]"
-    alt=""
-  />
-  <img
-    src="/images/home/dealsr2.png"
-    className="rounded-[12px] w-full sm:w-1/3 lg:w-full h-[150px] sm:h-[177px]"
-    alt=""
-  />
-  <img
-    src="/images/home/dealsr3.png"
-    className="rounded-[12px] w-full sm:w-1/3 lg:w-full h-[150px] sm:h-[177px]"
-    alt=""
-  />
-</div>
-
+      <div className="flex flex-col sm:flex-row lg:flex-col gap-3.5 mr-2.5">
+        <img
+          src="/images/home/dealsr1.png"
+          className="rounded-[12px] w-full sm:w-1/3 lg:w-full h-[150px] sm:h-[177px]"
+          alt=""
+        />
+        <img
+          src="/images/home/dealsr2.png"
+          className="rounded-[12px] w-full sm:w-1/3 lg:w-full h-[150px] sm:h-[177px]"
+          alt=""
+        />
+        <img
+          src="/images/home/dealsr3.png"
+          className="rounded-[12px] w-full sm:w-1/3 lg:w-full h-[150px] sm:h-[177px]"
+          alt=""
+        />
+      </div>
     </div>
   );
 }

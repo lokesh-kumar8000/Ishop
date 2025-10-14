@@ -27,37 +27,6 @@
       "static/chunks/main-app.js",
       "static/css/app/(website)/page.css",
       "static/chunks/app/(website)/page.js"
-    ],
-    "/(website)/profile-view/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(website)/profile-view/page.js"
-    ],
-    "/(admin-penal)/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/(admin-penal)/layout.css",
-      "static/chunks/app/(admin-penal)/layout.js"
-    ],
-    "/(admin-penal)/admin/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(admin-penal)/admin/page.js"
-    ],
-    "/_not-found/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/_not-found/page.js"
-    ],
-    "/(admin-penal)/admin/category/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(admin-penal)/admin/category/page.js"
-    ],
-    "/(admin-penal)/admin/category/edit/[category_id]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(admin-penal)/admin/category/edit/[category_id]/page.js"
     ]
   }
 }

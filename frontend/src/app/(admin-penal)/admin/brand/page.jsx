@@ -26,7 +26,10 @@ function BrandTable() {
       getbrands();
       setShowAll(true);
     }
-  }
+  } 
+
+
+  
 
   return (
     <div className="p-6">

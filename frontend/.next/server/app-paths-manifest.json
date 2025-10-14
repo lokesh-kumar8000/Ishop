@@ -1,8 +1,3 @@
 {
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/(admin-penal)/admin/page": "app/(admin-penal)/admin/page.js",
-  "/(website)/page": "app/(website)/page.js",
-  "/(website)/profile-view/page": "app/(website)/profile-view/page.js",
-  "/(admin-penal)/admin/category/edit/[category_id]/page": "app/(admin-penal)/admin/category/edit/[category_id]/page.js",
-  "/(admin-penal)/admin/category/page": "app/(admin-penal)/admin/category/page.js"
+  "/(website)/page": "app/(website)/page.js"
 }

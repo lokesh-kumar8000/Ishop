@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaLaptop } from "react-icons/fa";
 import { RiComputerLine } from "react-icons/ri";
 import { GiSmartphone } from "react-icons/gi";
@@ -10,35 +10,19 @@ import Link from "next/link";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
+import { getCategory } from "@/library/api.call";
 
-function Hero() {
-  const Category = [
-    {
-      icon: <FaLaptop className="text-[#01A49E] text-xl" />,
-      name: "Laptop",
-      count: 1,
-    },
-    {
-      icon: <RiComputerLine className="text-[#01A49E] text-xl" />,
-      name: "PC & Computers",
-      count: 2,
-    },
-    {
-      icon: <GiSmartphone className="text-[#01A49E] text-xl" />,
-      name: "Call Phones",
-      count: 3,
-    },
-    {
-      icon: <FaTabletScreenButton className="text-[#01A49E] text-xl" />,
-      name: "Tablets",
-      count: 4,
-    },
-    {
-      icon: <IoCameraSharp className="text-[#01A49E] text-xl" />,
-      name: "Cameras",
-      count: 5,
-    },
-  ];
+function Hero() { 
+  const [ Category , setCategory ] = useState([])
+
+ async function getcat(limit) {
+    const allData = await getCategory(null, limit);
+    setCategory(allData.data);
+  }
+  useEffect(() => {
+    getcat(5);
+  }, []);
+
 
   const heros = [
     {
@@ -91,7 +75,7 @@ function Hero() {
                 </span>
               </div>
               <div className="flex justify-center items-center h-[24px] w-[24px] rounded-full bg-[#01A49E78] text-[12px]">
-                {cat.count}
+                {cat.productCount}
               </div>
             </div>
           ))}

@@ -1,9 +1,11 @@
 "use client";
 import { getBrand } from "@/library/api.call";
 import { axioIsnstance, createSlug, getCookie, notify } from "@/library/helper";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 
 function BrandEdit({params}) {
+  const router = useRouter();
   const token = getCookie('admin_token');
     const {brand_id} = React.use(params)
     const [brands, setBrands] = useState({})
@@ -53,6 +55,7 @@ function BrandEdit({params}) {
             nameRef.current.value = "";
             slugRef.current.value = "";
           }
+          router.push('/admin/brand');
         })
         .catch((error) => {
             notify(error.response.data.message, error.response.data.success);

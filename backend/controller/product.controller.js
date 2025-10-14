@@ -60,9 +60,9 @@ const product = {
         currentPage,
       } = req.query;
       const id = req.params.id;
-
-      let skip = (currentPage - 1) * limit;
-      console.log(skip, "skip");
+      let limits = limit;
+      let skip = (currentPage - 1) * limits;
+      // console.log(skip, "skip");
       const filterQuery = {};
       if (categorySlug) {
         const category = await categoryModal.findOne({ slug: categorySlug });
@@ -99,7 +99,7 @@ const product = {
           .find(filterQuery)
           .populate(["categoryId", "brandId", "colors"])
           .skip(skip)
-          .limit(limit);
+          .limit(limits);
       }
 
       if (!product) {

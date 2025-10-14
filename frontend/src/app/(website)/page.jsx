@@ -19,7 +19,7 @@ function page() {
         <BestSeller/> 
         <TopCellphone/> 
         <BestLaptop/> 
-        <Three/>
+        {/* <Three/> */}
       </div>  
     </div>
   )
