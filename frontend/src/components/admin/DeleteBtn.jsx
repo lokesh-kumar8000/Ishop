@@ -28,14 +28,14 @@ function DeleteBtn({ id, url,setIds,ids }) {
         })
           .then((response) => {
             if (response.status === 200) {
-              notify(response.data.message, response.data.success);
+              notify(response?.data?.message, response?.data?.success);
               router.refresh(); 
               setIds(!ids);
             }
           })
           .catch((err) => {
             console.log(err);
-              notify(err.response.data.message, err.response.data.success);
+              notify(err?.response?.data?.message, err?.response?.data?.success);
           });
       }
     });

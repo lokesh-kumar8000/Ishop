@@ -7,12 +7,14 @@ import CartBtn from "../CartBtn";
 
 function DelOfDay() {
   const [product, setProduct] = useState({});
-  // console.log(Math.floor(Math.random() * 10));
+  const [img, setImg] = useState("");
+  // console.log(Math.floor(Math.random() * 10)); 
 
   async function getproduct() {
     const productJSON = await getProducts();
     const products = productJSON.data;
     let limit = Math.floor(Math.random() * products.length - 1);
+    setImg(products[limit]?.thumbnail);
     // console.log(products[limit]);
     setProduct(products[limit]);
   }
@@ -29,7 +31,7 @@ function DelOfDay() {
           <h4 className="font-bold text-[16px] sm:text-[18px] uppercase">
             Deals of the day
           </h4>
-          <p className="text-[12px] sm:text-[13px]">View All </p>
+          {/* <p className="text-[12px] sm:text-[13px]">View All </p> */}
         </div>
 
         {/* content box */}
@@ -37,21 +39,21 @@ function DelOfDay() {
           {/* left images */}
           <div className="flex gap-3 w-full lg:w-1/2">
             <div className="flex flex-col gap-3 mt-3 overflow-x-auto sm:overflow-visible">
-            {product?.images?.map((image, i) => (
-              <img
-                key={i}
-                src={`${process.env.NEXT_PUBLIC_API__BASE_URL}/image/product/${image}`}
-                alt="gallery"
-                // onMouseOver={() => setImge(image)}
-                // onMouseLeave={() => setImge(product.thumbnail)}
-                className="w-20 h-20 sm:w-24 sm:h-24 object-contain rounded border cursor-pointer hover:scale-105 transition"
-              />
-            ))}
-          </div>
+              {product?.images?.map((image, i) => (
+                <img
+                  key={i}
+                  src={`${process.env.NEXT_PUBLIC_API__BASE_URL}/image/product/${image}`}
+                  alt="gallery"
+                  onMouseOver={() => setImg(image)} 
+                  onMouseLeave={() => setImg(product.thumbnail)}
+                  className="w-20 h-20 sm:w-24 sm:h-24 object-contain rounded border cursor-pointer hover:scale-105 transition"
+                />
+              ))}
+            </div>
             <div className="flex-1">
               <div className="flex justify-center items-center relative">
                 <img
-                  src={`${process.env.NEXT_PUBLIC_API__BASE_URL}/image/product/${product?.thumbnail}`}
+                  src={`${process.env.NEXT_PUBLIC_API__BASE_URL}/image/product/${img}`}
                   className="rounded-2xl max-h-[400px] w-full object-contain sm:max-h-[500px]"
                   alt=""
                 />
@@ -61,7 +63,7 @@ function DelOfDay() {
                 <div className=" absolute top-0 left-[20px] py-1.5 px-2  rounded-[10px] bg-[#e61515] text-white ">
                   <p className=" text-[8px] uppercase ">OFF</p>
                   <h6 className=" text-[10px] font-medium ">
-                    {product.discountPercentage}%
+                    {product?.discountPercentage}%
                   </h6>
                 </div>
               </div>
@@ -71,7 +73,7 @@ function DelOfDay() {
           {/* right content */}
           <div className="w-full lg:w-1/2">
             <h2 className="font-bold text-4xl uppercase sm:text-base leading-[19px]">
-              {product.name}
+              {product?.name}
             </h2>
             <div className="flex items-center gap-3 flex-wrap">
               <span className="text-xl sm:text-2xl font-bold text-blue-600">
@@ -109,7 +111,7 @@ function DelOfDay() {
               </h2>
               <div className="flex gap-3 sm:gap-5 my-3">
                 <div className="bg-[#EBEDF3] rounded-[6px] px-2 py-3 sm:py-4 text-sm sm:text-base">
-                 016 D
+                  016 D
                 </div>
                 <div className="bg-[#EBEDF3] rounded-[6px] px-2 py-3 sm:py-4 text-sm sm:text-base">
                   -09 H

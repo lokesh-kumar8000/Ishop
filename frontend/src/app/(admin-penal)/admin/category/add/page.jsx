@@ -6,30 +6,32 @@ import { useRouter } from "next/navigation";
 import React, { useRef } from "react";
 
 function CategoryForm() {
-  const token = getCookie('admin_token');
+  const token = getCookie("admin_token");
   const slugRef = useRef();
   const nameRef = useRef();
+  const router = useRouter();
   const genrateSlug = () => {
     const slug = createSlug(nameRef.current.value);
     slugRef.current.value = slug;
   };
-  const genrateSlugs = () =>{
+  const genrateSlugs = () => {
     const slug = createSlug(slugRef.current.value);
     slugRef.current.value = slug;
-  }
+  };
 
   const handlerSubmit = (e) => {
     e.preventDefault();
 
-    const formData = new FormData(); 
+    const formData = new FormData();
     formData.append("name", nameRef.current.value);
     formData.append("slug", slugRef.current.value);
     formData.append("image", e.target.category_image.files[0]);
 
     if (nameRef.current.value === "" || slugRef.current.value === "") {
-      notify('Enter name and slug', 'warning' );
+      notify("Enter name and slug", "warning");
     } else {
-      axioIsnstance.post("category/create", formData,{
+      axioIsnstance
+        .post("category/create", formData, {
           headers: {
             Authorization: token,
           },
@@ -39,10 +41,11 @@ function CategoryForm() {
             notify(response.data.message, response.data.success);
             nameRef.current.value = "";
             slugRef.current.value = "";
+            router.push("/admin/category"); 
           }
         })
         .catch((error) => {
-            notify(error.response.data.message, error.response.data.success);
+          notify(error.response.data.message, error.response.data.success);
           console.log(error);
         });
     }

@@ -97,7 +97,7 @@ function ProductTable() {
                       url="product"
                       id={pro._id}
                       ids={ids}
-                      setIds={setIds}
+                      setIds={setIds} 
                     />
 
                     <Link href={`/admin/product/edit/${pro._id}`}>

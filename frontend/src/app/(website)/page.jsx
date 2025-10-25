@@ -17,8 +17,8 @@ function page() {
         <DelOfDay/> 
         <Discover/> 
         <BestSeller/> 
-        <TopCellphone/> 
-        <BestLaptop/> 
+        {/* <TopCellphone/>  */}
+        {/* <BestLaptop/>  */}
         {/* <Three/> */}
       </div>  
     </div>

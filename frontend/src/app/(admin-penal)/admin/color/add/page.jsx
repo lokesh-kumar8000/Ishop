@@ -1,20 +1,16 @@
 "use client";
-import {
-  axioIsnstance,
-  createSlug,
-  getCookie,
-  notify,
-} from "@/library/helper";
+import { axioIsnstance, createSlug, getCookie, notify } from "@/library/helper";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useRef } from "react";
 
 function colorForm() {
-  const token = getCookie("admin_token"); 
-  console.log(token,'token');
+  const token = getCookie("admin_token");
+  console.log(token, "token");
   const slugRef = useRef();
   const nameRef = useRef();
+  const router = useRouter();
   const genrateSlug = () => {
     const slug = createSlug(nameRef.current.value);
     slugRef.current.value = slug;
@@ -50,6 +46,7 @@ function colorForm() {
             notify(response.data.message, response.data.success);
             nameRef.current.value = "";
             slugRef.current.value = "";
+            router.push("/admin/color"); 
           }
         })
         .catch((error) => {
