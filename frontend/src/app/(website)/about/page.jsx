@@ -62,7 +62,7 @@ function page() {
     },
   ];
   return (
-    <div className=" py-[15px] px-[20px] sm:py-[25] sm:px-[30px] w-full  ">
+    <div className=" py-[15px] px-[20px] sm:py-[25] sm:px-[0px] w-full  ">
       <div>
         {/* hero seaction  */}
         <div className="bg-[url(/images/about/hero.png)] bg-cover bg-center w-full rounded-[10px] flex flex-col justify-center px-6 sm:px-10 md:px-20 py-12 sm:py-16 md:py-20">

@@ -175,7 +175,7 @@ export default function AccountInfoPage() {
   }
 
   return (
-    <div className=" flex items-center justify-center bg-gray-50 p-3 sm:p-6">
+    <div className=" flex items-center justify-center p-3 sm:px-0"> 
       <div className="w-full  bg-white rounded-2xl shadow-md flex flex-col md:flex-row">
         {/* Sidebar */}
         <div className="w-full md:w-1/4 border-b md:border-b-0 md:border-r p-4 sm:p-6 flex flex-col items-center">
@@ -618,8 +618,8 @@ export default function AccountInfoPage() {
               <NotLogIn />
             ))}
         </div>
-      </div>
-    </div>
+      </div> 
+    </div> 
   );
 }
 

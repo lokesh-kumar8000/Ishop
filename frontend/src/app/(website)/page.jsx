@@ -11,10 +11,10 @@ import Three from "@/components/website/home/Three"
 function page() {
   return (
     <div className='w-full py-5  ' > 
-      <div className=" py-[15px] px-[20px]  " > 
+      <div className=" py-[15px]  " > 
         <Hero/> 
         <Feature/> 
-        <DelOfDay/> 
+        {/* <DelOfDay/>  */}
         <Discover/> 
         <BestSeller/> 
         {/* <TopCellphone/>  */}

@@ -39,20 +39,43 @@
       "static/chunks/main-app.js",
       "static/chunks/app/(admin-penal)/admin/page.js"
     ],
-    "/(admin-penal)/admin/category/page": [
+    "/(admin-penal)/admin/product/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(admin-penal)/admin/category/page.js"
+      "static/chunks/app/(admin-penal)/admin/product/page.js"
     ],
-    "/(admin-penal)/admin/brand/page": [
+    "/(admin-penal)/admin/product/add/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(admin-penal)/admin/brand/page.js"
+      "static/css/app/(admin-penal)/admin/product/add/page.css",
+      "static/chunks/app/(admin-penal)/admin/product/add/page.js"
     ],
-    "/(admin-penal)/admin/brand/add/page": [
+    "/(admin-penal)/admin/product/edit/[edit_id]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(admin-penal)/admin/brand/add/page.js"
+      "static/css/app/(admin-penal)/admin/product/edit/[edit_id]/page.css",
+      "static/chunks/app/(admin-penal)/admin/product/edit/[edit_id]/page.js"
+    ],
+    "/(website)/store/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/(website)/store/layout.css",
+      "static/chunks/app/(website)/store/layout.js"
+    ],
+    "/(website)/store/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(website)/store/page.js"
+    ],
+    "/_not-found/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/_not-found/page.js"
+    ],
+    "/(website)/store/[category_slug]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(website)/store/[category_slug]/page.js"
     ]
   }
 }

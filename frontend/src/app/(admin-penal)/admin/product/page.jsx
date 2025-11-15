@@ -6,6 +6,7 @@ import ProductStock from "@/components/admin/ProductStock";
 import DeleteBtn from "@/components/admin/DeleteBtn";
 import { RxCross1 } from "react-icons/rx";
 import { motion, AnimatePresence } from "framer-motion";
+import { formatIndianCurrency } from "@/library/helper";
 
 function ProductTable() {
   const [product, setProduct] = useState([]);
@@ -14,12 +15,12 @@ function ProductTable() {
   const [ids, setIds] = useState(false); 
   const [pages, setPages] = useState(0); 
   const [currentPage, setCurrentPage] = useState(0); 
-  let limit = 2;
+  let limit = 6;
   useEffect(() => {
     const fetchData = async () => {
       const allData = await getProducts(null ,null,null,null,null,null,limit,currentPage);
       setProduct(allData.data);
-      setPages(Math.ceil(allData.total_product / limit));
+      setPages(Math.ceil(allData.total_product / limit)); 
     };
     fetchData();
   }, [ids,currentPage]);
@@ -142,15 +143,18 @@ function ProductTable() {
 
 export default ProductTable;
 
+// product view 
+
 function ProductView({ product, onClose }) {
-  const [img, setImg] = useState(product.thumbnail);
+  const [img, setImg] = useState(product.thumbnail); 
+  
   return (
     <motion.div
       initial={{ x: "-100%", opacity: 0 }} // 👈 Start from left
       animate={{ x: 0, opacity: 1 }} // 👈 Slide to center
       exit={{ x: "-100%", opacity: 0 }} // 👈 Exit back to left
       transition={{ duration: 0.5, ease: "easeInOut" }}
-      className="absolute min-h-screen top-0 left-0 right-0 p-6 bg-blue-100 z-50"
+      className="absolute min-h-screen top-0 left-0 right-0 p-6 bg-white z-50"
     >
       <div className=" flex justify-between items-center ">
         <h1> Product Veiw page </h1>
@@ -188,10 +192,10 @@ function ProductView({ product, onClose }) {
 
           <div>
             <span className="line-through text-gray-400 mr-2">
-              ₹{product.originalPrice}
+              {formatIndianCurrency(product.originalPrice)}
             </span>
             <span className="text-red-600 text-xl font-bold">
-              ₹{product.finalPrice}
+              {formatIndianCurrency(product.finalPrice)}
             </span>
             <span className="ml-2 text-green-600">
               ({product.discountPercentage}% OFF)
@@ -213,9 +217,8 @@ function ProductView({ product, onClose }) {
               <div className=" flex gap-2.5 ">
                 {product.colors?.map((name, i) => {
                   return (
-                    <p key={i} style={{ backgroundColor: name.name }}>
-                      {" "}
-                      {name.name}{" "}
+                    <p key={i} className=" w-[30px] h-[30px] rounded-full " style={{ backgroundColor: name.hexCode }}>
+                      
                     </p>
                   );
                 })}

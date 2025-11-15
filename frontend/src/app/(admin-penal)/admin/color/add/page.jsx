@@ -44,9 +44,9 @@ function colorForm() {
         .then((response) => {
           if (response.data.success) {
             notify(response.data.message, response.data.success);
-            nameRef.current.value = "";
-            slugRef.current.value = "";
-            router.push("/admin/color"); 
+            nameRef.current.value = ""; 
+            slugRef.current.value = ""; 
+            router.push("/admin/color");  
           }
         })
         .catch((error) => {

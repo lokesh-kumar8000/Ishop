@@ -5,6 +5,7 @@ import { MdCancel } from "react-icons/md";
 import { CiHeart } from "react-icons/ci";
 import { FaCheckCircle } from "react-icons/fa";
 import CartBtn from "./CartBtn";
+import { formatIndianCurrency } from "@/library/helper";
 
 function ProductCard({ product }) {
   return (
@@ -25,10 +26,10 @@ function ProductCard({ product }) {
         {/* Price Section */}
         <div className=" flex gap-1 items-center ">
           <span className=" text-[18px] text-[#F1352B] font-semibold ">
-            {product.finalPrice}
+            {formatIndianCurrency(product.finalPrice)}
           </span>
           <span className=" text-[14px] font-semibold text-[#666666] line-through ">
-            {product.originalPrice}
+            {formatIndianCurrency(product.originalPrice)} 
           </span>
         </div>
 

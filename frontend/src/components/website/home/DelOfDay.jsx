@@ -13,9 +13,10 @@ function DelOfDay() {
   async function getproduct() {
     const productJSON = await getProducts();
     const products = productJSON.data;
-    let limit = Math.floor(Math.random() * products.length - 1);
+    let limit = Math.floor(Math.random() * products.length);
     setImg(products[limit]?.thumbnail);
-    // console.log(products[limit]);
+    // console.log(products , 'prodjucts');
+    // console.log(limit , 'limit');
     setProduct(products[limit]);
   }
 
@@ -77,31 +78,31 @@ function DelOfDay() {
             </h2>
             <div className="flex items-center gap-3 flex-wrap">
               <span className="text-xl sm:text-2xl font-bold text-blue-600">
-                {formatIndianCurrency(product.finalPrice)}
+                {formatIndianCurrency(product?.finalPrice)}
               </span>
               <span className="line-through text-gray-400 text-sm sm:text-base">
-                {formatIndianCurrency(product.originalPrice)}
+                {formatIndianCurrency(product?.originalPrice)}
               </span>
               <span className="text-green-600 font-medium text-sm sm:text-base">
-                {product.discountPercentage}% Off
+                {product?.discountPercentage}% Off
               </span>
             </div>
 
             {/* features */}
             <p className="text-gray-600 text-sm sm:text-base">
-              {product.shortDescription}
+              {product?.shortDescription}
             </p>
 
             <p
               className={`font-semibold text-sm sm:text-base ${
-                product.stock ? "text-green-600" : "text-red-600"
+                product?.stock ? "text-green-600" : "text-red-600"
               }`}
             >
-              {product.stock ? "In Stock" : "Out of Stock"}
+              {product?.stock ? "In Stock" : "Out of Stock"}
             </p>
             <div
               className="prose max-w-none text-sm sm:text-base"
-              dangerouslySetInnerHTML={{ __html: product.longDescription }}
+              dangerouslySetInnerHTML={{ __html: product?.longDescription }}
             />
 
             {/* timer */}
@@ -136,9 +137,9 @@ function DelOfDay() {
             </div>
             <div>
               <CartBtn
-                finalPrice={product.finalPrice}
-                originalPrice={product.originalPrice}
-                productId={product._id}
+                finalPrice={product?.finalPrice}
+                originalPrice={product?.originalPrice}
+                productId={product?._id}
               />
             </div>
           </div>

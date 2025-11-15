@@ -14,7 +14,7 @@ export default async function RootLayout({ children }) {
   const brands = brandJSON.data;
 
   const colorJSON = await getcolor(null);
-  const colors = colorJSON.data;
+  const colors = colorJSON.data; 
 
   return (
     // <html lang="en">

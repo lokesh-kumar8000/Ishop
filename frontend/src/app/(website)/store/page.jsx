@@ -1,15 +1,53 @@
+"use client";
 import ProductCard from "@/components/website/ProductCard";
 import { getProducts } from "@/library/api.call";
-import React from "react";
+import { useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
-async function page({ searchParams }) {
-  const brand = searchParams.brand ?? null;
-  const color = searchParams.color ?? null;
-  const min = searchParams.min ?? null;
-  const max = searchParams.max ?? null; 
+function page() {
+  const searchParams = useSearchParams();
+  const [products, setProducts] = useState([]);
+  const [pages, setPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const brand = searchParams.get("brand") ?? null;
+  const color = searchParams.get("color") ?? null;
+  const min = searchParams.get("min") ?? null;
+  const max = searchParams.get("max") ?? null;
 
-  const productJSON = await getProducts(null, null, brand, color,min,max); 
-  const products = productJSON.data; 
+  let limit = 12;
+
+  const fatchData = async () => {
+    const productJSON = await getProducts(
+      null,
+      null,
+      brand,
+      color,
+      min,
+      max,
+      limit,
+      currentPage
+    ); 
+    setProducts(productJSON.data);
+    setPages(Math.ceil(productJSON.total_product / limit));
+  };
+  useEffect(() => {
+    fatchData();
+  }, [searchParams,currentPage]);
+
+  let pagination = [];
+
+  for (let i = 1; i <= pages; i++) {
+    pagination.push(
+      <button
+        key={i}
+        onClick={() => setCurrentPage(i)}
+        className=" px-4 py-2 border cursor-pointer "
+      >
+        {" "}
+        {i}{" "}
+      </button>
+    );
+  }
   return (
     <div className="w-full sm:px-5 px-0 ">
       <h4 className=" text-[18px]  font-bold leading-[21px] pb-3 ">
@@ -20,6 +58,9 @@ async function page({ searchParams }) {
           products.map((product, index) => {
             return <ProductCard key={index} product={product} />;
           })}
+      </div>
+      <div className=" my-5 flex justify-center items-center ">
+        <div> {pagination} </div>
       </div>
     </div>
   );

@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
     //     className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     //   >
         <div className=" w-full bg-blue-50 ">
-          <div className=" w-full ">
+          <div className=" mx-auto max-w-[1396px] ">
             <StoreProvider>
               <ToastContainer
                 position="top-center"

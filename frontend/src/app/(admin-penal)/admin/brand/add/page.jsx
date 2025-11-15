@@ -1,41 +1,44 @@
 "use client";
 import { axioIsnstance, createSlug, getCookie, notify } from "@/library/helper";
+import { useRouter } from "next/navigation";
 import React, { useRef } from "react";
 
 function BrandForm() {
-  const token = getCookie('admin_token');
+  const token = getCookie("admin_token");
   const slugRef = useRef();
-  const nameRef = useRef(); 
+  const nameRef = useRef();
+  const router = useRouter();
   const genrateSlug = () => {
     const slug = createSlug(nameRef.current.value);
     slugRef.current.value = slug;
   };
-  const genrateSlugs = () =>{
+  const genrateSlugs = () => {
     const slug = createSlug(slugRef.current.value);
     slugRef.current.value = slug;
-  }
+  };
 
   const handlerSubmit = (e) => {
     e.preventDefault();
-    const formData = new FormData(); 
+    const formData = new FormData();
     formData.append("name", nameRef.current.value);
     formData.append("slug", slugRef.current.value);
     formData.append("image", e.target.brand_logo.files[0]);
 
     if (nameRef.current.value === "" || slugRef.current.value === "") {
-      notify('Enter name and slug', 'warning' );
+      notify("Enter name and slug", "warning");
     } else {
-      axioIsnstance.post("brand/create", formData,{
+      axioIsnstance
+        .post("brand/create", formData, {
           headers: {
             Authorization: token,
           },
         })
         .then((response) => {
           if (response.data.success) {
-            console.log(response);
             notify(response.data.message, response.data.success);
             nameRef.current.value = "";
-            slugRef.current.value = "";
+            slugRef.current.value = ""; 
+            router.push("/admin/brand");
           }
         })
         .catch((error) => {

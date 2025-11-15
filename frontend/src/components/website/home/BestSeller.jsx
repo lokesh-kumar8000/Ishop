@@ -70,7 +70,7 @@ import ProductCard from "../ProductCard";
           products.map((product, index) => {
             return <ProductCard key={index} product={product} />;
           })}
-      </div>
+      </div> 
     </div>
   );
 }
