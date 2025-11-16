@@ -1,8 +1,4 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/(admin-penal)/admin/product/edit/[edit_id]/page": "app/(admin-penal)/admin/product/edit/[edit_id]/page.js",
   "/(website)/page": "app/(website)/page.js",
-  "/(admin-penal)/admin/product/page": "app/(admin-penal)/admin/product/page.js",
-  "/(website)/store/page": "app/(website)/store/page.js",
-  "/(website)/store/[category_slug]/page": "app/(website)/store/[category_slug]/page.js"
+  "/(website)/contact/page": "app/(website)/contact/page.js"
 }

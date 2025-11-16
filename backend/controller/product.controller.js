@@ -60,7 +60,7 @@ const product = {
         currentPage,
       } = req.query;
       const id = req.params.id;
-      let limits = limit || 8;
+      let limits = limit || 12;
       let skip = (currentPage - 1) * limits;
       // console.log(skip, "skip");
       const filterQuery = {};

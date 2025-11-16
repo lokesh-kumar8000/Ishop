@@ -16,12 +16,12 @@ productRouter.post(
   create
 );
 productRouter.get("/:id?", read);
-productRouter.patch("/status/:id", authMiddleware, status);
-productRouter.delete("/delete/:id", authMiddleware, deleted);
-productRouter.put(
-  "/update/:id",
-  fileUpload({ createParentPath: true }),
-  authMiddleware,
+productRouter.patch("/status/:id", authMiddleware, status); 
+productRouter.delete("/delete/:id", authMiddleware, deleted); 
+productRouter.put( 
+  "/update/:id", 
+  fileUpload({ createParentPath: true }), 
+  authMiddleware, 
   updated
 );
 
