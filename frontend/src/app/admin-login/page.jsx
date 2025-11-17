@@ -11,7 +11,7 @@ export default function AdminLogin() {
     e.preventDefault();
     const data = {
       email: e.target.email.value,
-      password: e.target.password.value
+      password: e.target.password.value 
     }
 
     axioIsnstance.post('admin/login',data, {withCredentials:true} ).then(

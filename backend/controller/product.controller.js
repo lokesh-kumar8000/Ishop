@@ -16,7 +16,7 @@ const fs = require("fs");
 async function savefile(imgObj) {
   const imageName = createUniqeName(imgObj.name);
   const destination = "public/image/product/" + imageName;
-  await imgObj.mv(destination);
+  await imgObj.mv(destination); 
   return imageName;
 }
 

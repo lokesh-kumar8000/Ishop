@@ -1,6 +1,6 @@
 "use client";
 import { FaShoppingCart } from "react-icons/fa";
-import { axioIsnstance, notify } from "@/library/helper";
+import { axioIsnstance, formatIndianCurrency, notify } from "@/library/helper";
 import { incDec, removeCart } from "@/redux/features/cartSlice";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
@@ -122,9 +122,8 @@ export default function CartPage({ products }) {
                           {product.name}
                         </h3>
                         <p className="text-red-600 font-bold text-lg">
-                          ₹{product.finalPrice * item.qty}
+                          {formatIndianCurrency(product.finalPrice * item.qty)}
                         </p>
-
                         {/* Quantity */}
                         <div className="flex items-center gap-2 mt-2">
                           <button
@@ -200,19 +199,21 @@ export default function CartPage({ products }) {
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-600">Order Total:</span>
-              <span className="font-medium">₹ {cart.original_total} </span>
+              <span className="font-medium">
+                {formatIndianCurrency(cart.original_total)}{" "}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Saving:</span>
               <span className="font-medium">
                 {" "}
-                ₹ {cart.original_total - cart.final_total}
+                {formatIndianCurrency(cart.original_total - cart.final_total)}
               </span>
             </div>
           </div>
           <div className="flex justify-between mt-4 font-bold text-lg">
             <span>ORDER TOTAL:</span>
-            <span>₹ {cart.final_total} </span>
+            <span>{formatIndianCurrency(cart.final_total)} </span>
           </div>
           <button
             onClick={checkoutHandler}

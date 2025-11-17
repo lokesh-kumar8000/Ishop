@@ -1,8 +1,43 @@
+"use client";
+import { axioIsnstance, notify } from "@/library/helper";
 import Link from "next/link";
-import React from "react";
+import React, { useRef } from "react";
 import { FaTwitter, FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 
 function Page() {
+  const fNameRef = useRef();
+  const lNameRef = useRef();
+  const emailRef = useRef();
+  const phoneRef = useRef();
+  const countryRef = useRef();
+  const subRef = useRef();
+  const msgRef = useRef(); 
+  const formRef = useRef(); 
+
+  function fromHandler(e) {
+    e.preventDefault();
+
+    const data = {
+      fName: fNameRef.current.value,
+      lName: lNameRef.current.value,
+      email: emailRef.current.value,
+      phone: phoneRef.current.value,
+      country: countryRef.current.value,
+      subject: subRef.current.value,
+      message: msgRef.current.value,
+    }; 
+
+    axioIsnstance
+      .post("contact/msg", data)
+      .then((response) => {
+        notify(response.data.message, true); 
+        formRef.current.reset(); 
+      })
+      .catch((error) => {
+        console.log(error);
+      }); 
+  } 
+
   return (
     <div className="w-full my-3.5">
       {/* Contact Section */}
@@ -19,7 +54,7 @@ function Page() {
             </p>
 
             {/* Form */}
-            <form className="space-y-6">
+            <form ref={formRef} onSubmit={fromHandler} className="space-y-6">
               {/* First + Last Name */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -29,6 +64,7 @@ function Page() {
                   <input
                     type="text"
                     required
+                    ref={fNameRef}
                     className="w-full mt-2 border border-gray-300 rounded-md p-3 text-sm sm:text-base focus:outline-none focus:ring-1 focus:ring-green-500"
                   />
                 </div>
@@ -39,6 +75,7 @@ function Page() {
                   <input
                     type="text"
                     required
+                    ref={lNameRef}
                     className="w-full mt-2 border border-gray-300 rounded-md p-3 text-sm sm:text-base focus:outline-none focus:ring-1 focus:ring-green-500"
                   />
                 </div>
@@ -52,6 +89,7 @@ function Page() {
                 <input
                   type="email"
                   required
+                  ref={emailRef}
                   className="w-full mt-2 border border-gray-300 rounded-md p-3 text-sm sm:text-base focus:outline-none focus:ring-1 focus:ring-green-500"
                 />
               </div>
@@ -64,6 +102,7 @@ function Page() {
                 </label>
                 <input
                   type="text"
+                  ref={phoneRef}
                   className="w-full mt-2 border border-gray-300 rounded-md p-3 text-sm sm:text-base focus:outline-none focus:ring-1 focus:ring-green-500"
                 />
               </div>
@@ -73,7 +112,11 @@ function Page() {
                 <label className="block text-sm font-medium">
                   Country / Region <span className="text-red-500">*</span>
                 </label>
-                <select className="w-full mt-2 border border-gray-300 rounded-md p-3 text-sm sm:text-base focus:outline-none focus:ring-1 focus:ring-green-500">
+                <select
+                  defaultValue="India"
+                  ref={countryRef}
+                  className="w-full mt-2 border border-gray-300 rounded-md p-3 text-sm sm:text-base focus:outline-none focus:ring-1 focus:ring-green-500"
+                >
                   <option>United States (US)</option>
                   <option>United Kingdom (UK)</option>
                   <option>India</option>
@@ -88,6 +131,7 @@ function Page() {
                 </label>
                 <input
                   type="text"
+                  ref={subRef}
                   className="w-full mt-2 border border-gray-300 rounded-md p-3 text-sm sm:text-base focus:outline-none focus:ring-1 focus:ring-green-500"
                 />
               </div>
@@ -97,6 +141,8 @@ function Page() {
                 <label className="block text-sm font-medium">Message</label>
                 <textarea
                   rows="5"
+                  required
+                  ref={msgRef}
                   className="w-full mt-2 border border-gray-300 rounded-md p-3 text-sm sm:text-base focus:outline-none focus:ring-1 focus:ring-green-500"
                   placeholder="Note about your order, e.g. special note for delivery"
                 ></textarea>
@@ -116,8 +162,8 @@ function Page() {
 
               {/* Button */}
               <button
-                type="button"
-                className="bg-[#01A49E] text-white px-6 py-3 rounded-md hover:bg-[#18b9b4] text-[12px] sm:text-sm md:text-base"
+                type="submit"
+                className="bg-[#01A49E] cursor-pointer text-white px-6 py-3 rounded-md hover:bg-[#18b9b4] text-[12px] sm:text-sm md:text-base"
               >
                 SEND MESSAGE
               </button>

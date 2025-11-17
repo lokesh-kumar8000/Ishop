@@ -5,15 +5,13 @@ const admin = {
   async login(req, res) {
     try {
       const { email, password } = req.body;
-      // const email = req.body?.email;
-      console.log(email, password);
 
       const admin = await adminModel.findOne({ email: email });
       if (!admin) return errorResponse(res, "admin not found");
       if (password !== admin.password)
         return errorResponse(res, "password not match ");
 
-      const token = jwt.sign(
+      const token = jwt.sign( 
         {
           id: admin._id,
           email: admin.email,

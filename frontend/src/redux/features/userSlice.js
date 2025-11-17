@@ -2,11 +2,11 @@ import { createSlice, current } from "@reduxjs/toolkit";
 
 export const userSlice = createSlice({
   name: "user",
-  initialState: {
-    data: null,
-    token: null,
-    loginAt: null,
-  },
+  initialState: { 
+    data: null, 
+    token: null, 
+    loginAt: null, 
+  }, 
   reducers: {
     userLogin: (state, { payload }) => {
       state.data = payload.user;
@@ -15,11 +15,11 @@ export const userSlice = createSlice({
       localStorage.setItem("user", JSON.stringify(state));
     },
     userAdd: (state) => {
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (user) {
-        state.data = user.data;
-        state.token = user.token;
-        state.loginAt = user.loginAt;
+      const user = JSON.parse(localStorage.getItem("user")); 
+      if (user) { 
+        state.data = user.data; 
+        state.token = user.token; 
+        state.loginAt = user.loginAt; 
       }
     },
     clearUser: (state) => {

@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { lstoCart } from "@/redux/features/cartSlice";
 import { userAdd } from "@/redux/features/userSlice";
+import { formatIndianCurrency } from "@/library/helper";
 
 export default function Header() {
   const dispatcher = useDispatch();
@@ -98,8 +99,6 @@ export default function Header() {
               ) : (
                 <Link href={'/user-login'} > <p className="font-bold text-[14px]">Log in / Register</p> </Link>
               )}
-              {/* <p className="text-[11px] text-[#666666]">Welcome</p>
-              <p className="font-bold text-[14px]">Log in / Register</p> */}
             </div>
 
             <Link href="/cart">
@@ -115,7 +114,7 @@ export default function Header() {
             <Link href="/cart">
               <div className="hidden sm:block">
                 <p className="text-[11px] text-[#666666]">Cart</p>
-                <p className="font-bold text-[14px]"> ₹{cart.final_total} </p>
+                <p className="font-bold text-[14px]"> {formatIndianCurrency(cart.final_total)} </p>
               </div>
             </Link>
 

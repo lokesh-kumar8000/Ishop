@@ -13,14 +13,14 @@ const orderController = {
   async orderPlace(req, res) {
     try {
       const { user_id, payment_mode, shipping_details } = req.body;
-      const cart = await cartModel
-        .find({ user_id })
-        .populate("product_id", "finalPrice _id");
-      const productDetails = cart.map((item) => {
+      const cart = await cartModel 
+        .find({ user_id })           
+        .populate("product_id", "finalPrice _id"); 
+      const productDetails = cart.map((item) => { 
         return {
-          product_Id: item?.product_id?._id,
-          qty: item.qty,
-          price: item.product_id.finalPrice,
+          product_Id: item?.product_id?._id, 
+          qty: item.qty, 
+          price: item.product_id.finalPrice, 
           total: item.qty * item.product_id.finalPrice,
         };
       });

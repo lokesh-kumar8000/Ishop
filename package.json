@@ -1,10 +1,9 @@
 {
   "dependencies": {
-    "concurrently": "^9.2.0"
+    "concurrently": "^9.2.0",
+    "nodemailer": "^7.0.10"
   },
-"scripts": {
-  "start": "concurrently \"cd backend && node --watch index.js\" \"cd frontend && npm run dev\""
-}
-
-
+  "scripts": {
+    "start": "concurrently \"cd backend && node --watch index.js\" \"cd frontend && npm run dev\""
+  }
 }

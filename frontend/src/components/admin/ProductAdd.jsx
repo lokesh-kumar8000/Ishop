@@ -54,13 +54,13 @@ export default function ProductAdd({ category, brand, color }) {
     axioIsnstance.post("product/create",formData,{
           headers: {
             Authorization: token,
-          },
-        }).then(
-      (response)=>{
+          }, 
+        }).then( 
+      (response)=>{ 
         notify(response.data.message,response.data.success); 
       router.push('/admin/product'); 
-      }
-    ).catch(
+      } 
+    ).catch( 
       (error)=>{
         console.log(error);
                  notify(error.response.data.message,error.response.data.success); 

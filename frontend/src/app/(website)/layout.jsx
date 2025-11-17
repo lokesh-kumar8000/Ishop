@@ -22,10 +22,6 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    // <html lang="en">
-    //   <body
-    //     className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-    //   >
         <div className=" w-full bg-blue-50 ">
           <div className=" mx-auto max-w-[1396px] ">
             <StoreProvider>
@@ -47,7 +43,5 @@ export default function RootLayout({ children }) {
             </StoreProvider>
           </div>
         </div>
-    //   </body>
-    // </html>
   );
 }

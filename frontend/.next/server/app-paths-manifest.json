@@ -1,4 +1,7 @@
 {
+  "/user-login/page": "app/user-login/page.js",
   "/(website)/page": "app/(website)/page.js",
-  "/(website)/contact/page": "app/(website)/contact/page.js"
+  "/(website)/cart/page": "app/(website)/cart/page.js",
+  "/(website)/checkout/page": "app/(website)/checkout/page.js",
+  "/(website)/thank-you/[orderId]/page": "app/(website)/thank-you/[orderId]/page.js"
 }
