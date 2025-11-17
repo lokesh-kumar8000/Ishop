@@ -18,7 +18,8 @@ export default function CheckoutPage() {
   const userToken = useSelector((state) => state?.user);
   const dispatcher = useDispatch();
 
-  // 🧾 Get shipping address
+
+  // Get shipping address
   useEffect(() => {
     if (!user?._id) return;
     axioIsnstance
@@ -29,7 +30,7 @@ export default function CheckoutPage() {
       .catch((err) => console.log(err));
   }, [user]);
 
-  // 🚫 Stop redirect loop (Removed checkout redirect)
+  //  Stop redirect loop (Removed checkout redirect)
   useEffect(() => {
     if (!user) {
       router.push("/user-login");
@@ -38,15 +39,22 @@ export default function CheckoutPage() {
     }
   }, [user]);
 
-  // 🧠 Order Handler (Main Logic)
+  //  Order Handler (Main Logic)
   function orderHandler() {
-    console.log("Selected Payment Mode:", paymentMode);
+
+    if (shipingAddress.length == 0) {
+      notify("Add Address", false); 
+      router.push("/profile-view"); 
+      return; 
+    }
 
     axioIsnstance
       .post("order/order-place", {
         user_id: user._id,
         payment_mode: paymentMode,
         shipping_details: shipingAddress[selectAddress],
+        name: user.name,
+        email: user.email,
       })
       .then((response) => {
         console.log("Order Response:", response.data);
@@ -56,23 +64,22 @@ export default function CheckoutPage() {
           return;
         }
 
-        // 💰 COD
+        //  COD
         if (paymentMode === 0) {
           router.push(`/thank-you/${response.data.order_id}`);
           dispatcher(clearCart());
           return;
         }
 
-        // 💳 Online Payment (Razorpay)
+        //  Online Payment (Razorpay)
         const options = {
           key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
           // amount: response.data.amount || cart.final_total * 100, // amount in paise
           currency: "INR",
           name: "Lokesh Kumar",
           description: "Test Transaction",
-          order_id: response.data.rozorpay_order_id, // backend से आने वाला order_id
+          order_id: response.data.rozorpay_order_id,
           handler: function (razorResponse) {
-            console.log("Razorpay Response:", razorResponse);
             axioIsnstance
               .post(
                 "order/success",
@@ -88,7 +95,6 @@ export default function CheckoutPage() {
                 }
               )
               .then((successResponse) => {
-                console.log(successResponse);
                 if (successResponse.data.status == "success") {
                   dispatcher(clearCart());
                   router.push(`/thank-you/${response.data.order_id}`);

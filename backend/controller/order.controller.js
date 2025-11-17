@@ -2,6 +2,7 @@ const cartModel = require("../model/cart.model");
 const orderModel = require("../model/order.model");
 const mongoose = require("mongoose");
 const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 const { errorResponse, successResponse } = require("../utility/response");
 const Razorpay = require("razorpay");
 var instance = new Razorpay({
@@ -12,15 +13,15 @@ var instance = new Razorpay({
 const orderController = {
   async orderPlace(req, res) {
     try {
-      const { user_id, payment_mode, shipping_details } = req.body;
-      const cart = await cartModel 
-        .find({ user_id })           
-        .populate("product_id", "finalPrice _id"); 
-      const productDetails = cart.map((item) => { 
+      const { user_id, payment_mode, shipping_details, name, email } = req.body;
+      const cart = await cartModel
+        .find({ user_id })
+        .populate("product_id", "finalPrice _id");
+      const productDetails = cart.map((item) => {
         return {
-          product_Id: item?.product_id?._id, 
-          qty: item.qty, 
-          price: item.product_id.finalPrice, 
+          product_Id: item?.product_id?._id,
+          qty: item.qty,
+          price: item.product_id.finalPrice,
           total: item.qty * item.product_id.finalPrice,
         };
       });
@@ -37,9 +38,49 @@ const orderController = {
         shipping_details: shipping_details,
       });
 
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.MAIL_USER, // sender email
+          pass: process.env.MAIL_PASS, // app password
+        },
+      });
+
+      async function sendOrderConfirmation(
+        email,
+        name,
+        orderId,
+        amount,
+        paymentMethod
+      ) {
+        await transporter.sendMail({
+          from: process.env.MAIL_USER,
+          to: email,
+          subject: `Order Confirmation #${orderId}`,
+          html: `
+      <h2>Thank You for Your Order!</h2>
+      <p>Hello <strong>${name}</strong>,</p>
+      <p>Your order <strong>#${orderId}</strong> has been placed successfully.</p>
+      <p><strong>Total Amount:</strong> ₹${amount}</p> 
+      <p>We will notify you once your order is shipped.</p>
+       <p><strong>Payment Method:</strong> ${paymentMethod}</p> 
+      <p>You have 7 days to place your order</p>  
+      <br/> 
+      <p>Regards,<br/>SWAT Techmart Team</p>
+    `,
+        });
+      }
+
       if (payment_mode == 0) {
         await order.save();
         await cartModel.deleteMany({ user_id });
+        sendOrderConfirmation(
+          email,
+          name,
+          order._id,
+          cart_total,
+          "Cash on Delivery"
+        );
         return res.status(201).json({
           success: true,
           message: "Order place",
@@ -47,7 +88,7 @@ const orderController = {
         });
       } else {
         var options = {
-          amount: cart_total,
+          amount: cart_total * 100,
           currency: "INR",
           receipt: order._id,
         };
@@ -57,13 +98,21 @@ const orderController = {
             return errorResponse(res, "order not create");
           } else {
             order.rozorpay_order_id = razorpayorder.id;
-            await order.save();
-            return res.status(201).json({
+            res.status(201).json({
               success: true,
               message: "Order place",
               order_id: order._id,
               rozorpay_order_id: razorpayorder.id,
             });
+            await order.save();
+            sendOrderConfirmation(
+              email,
+              name,
+              order._id,
+              cart_total,
+              "Online Payment"
+            );
+            return;
           }
         });
       }

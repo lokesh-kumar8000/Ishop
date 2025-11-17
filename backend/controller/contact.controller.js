@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import nodemailer from "nodemailer"; 
 
 const contact = {
   async message(req, res) {

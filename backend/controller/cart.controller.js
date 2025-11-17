@@ -51,8 +51,7 @@ const cart = {
 
   async addtoCart(req, res) {
     try {
-      const { productId, qty, userId } = req.body;
-
+      const { productId, qty, userId } = req.body; 
       const existingItem = await cartModel.findOne({
         user_id: userId,
         product_id: productId,
