@@ -3,7 +3,6 @@ import { BsCart } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import { HiOutlineMenu, HiX } from "react-icons/hi";
 import React from "react";
-import Search from "./Search";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { lstoCart } from "@/redux/features/cartSlice";
@@ -166,7 +165,7 @@ export default function Header() {
           </div>
         )}
         {/* <Search/>  */}
-        <Search />
+        {/* <Search /> */}
       </div>
     </div>
   );

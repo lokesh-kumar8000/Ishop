@@ -92,7 +92,7 @@ function Feature() {
           {category.map((data, index) => (
             <div key={index} className="flex flex-col items-center">
               <img
-                src={`${process.env.NEXT_PUBLIC_API__BASE_URL}/image/category/${data.image}`}
+                src={`${process.env.NEXT_PUBLIC_API__BASE_URL}/image/category/${data.image}`} 
                 alt={data.name}
                 className="w-12 h-12 rounded-lg object-cover"
               />

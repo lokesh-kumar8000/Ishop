@@ -17,25 +17,7 @@ export default async function RootLayout({ children }) {
   const colors = colorJSON.data; 
 
   return (
-    // <html lang="en">
-    //   <body>
         <div className=" w-full ">
-          {/* navigation */}
-          <div className="  bg-white rounded-[10px] py-5 px-7.5 my-5 ">
-            <div className=" space-x-2 ">
-              <span className="text-[#999999] text-[14px] font-bold cursor-pointer">
-                Home
-              </span>
-              <span className="text-[#999999] text-[14px] font-bold ">/</span>
-              <span className="text-[#999999] text-[14px] font-bold cursor-pointer">
-                Shop
-              </span>
-              <span className="text-[#999999] text-[14px] font-bold">/</span>
-              <span className=" text-[14px] font-bold cursor-pointer">
-                Top Cell Phones & Tablets
-              </span>
-            </div>
-          </div>
           <Hero />
           <PopularCategories />
           <div className=" bg-white rounded-[10px] my-4">
@@ -51,7 +33,5 @@ export default async function RootLayout({ children }) {
             </div>
           </div>
         </div>
-    //   </body>
-    // </html>
   );
 }

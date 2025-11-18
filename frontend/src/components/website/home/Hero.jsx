@@ -36,7 +36,7 @@ function Hero() {
     {
       img: "/images/homeHero.png",
       msg: (
-        <h1 className="text-[32px] sm:text-[48px] lg:text-[72px] font-bold leading-tight">
+        <h1 className="text-[48px] lg:text-[72px] font-bold leading-tight">
           Don’t miss amazing <br className="hidden sm:block" /> grocery deals
         </h1>
       ),
@@ -75,7 +75,7 @@ function Hero() {
                 </span>
               </div>
               <div className="flex justify-center items-center h-[24px] w-[24px] rounded-full bg-[#01A49E78] text-[12px]">
-                {cat.productCount}
+                {cat.productCount} 
               </div>
             </div>
           ))}

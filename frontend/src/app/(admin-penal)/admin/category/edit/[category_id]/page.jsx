@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 function CategoryEdit({ params }) {
   const token = getCookie("admin_token");
-  const { category_id } = params;
+  const { category_id } = React.use(params);
   const [category, setCategory] = useState({});
 
   async function getFormData() {
