@@ -27,7 +27,7 @@ export default async function RootLayout({ children }) {
                 <BrandFilter brands={brands} /> 
                 <ColorFilter color={colors} /> 
                 <PriceFilter />
-                {/* <Categories /> */}
+                
               </div>
               <div>{children}</div>
             </div>

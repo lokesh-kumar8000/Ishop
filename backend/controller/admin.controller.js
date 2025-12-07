@@ -7,6 +7,7 @@ const admin = {
       const { email, password } = req.body;
 
       const admin = await adminModel.findOne({ email: email });
+      console.log(admin,'admin'); 
       if (!admin) return errorResponse(res, "admin not found");
       if (password !== admin.password)
         return errorResponse(res, "password not match ");

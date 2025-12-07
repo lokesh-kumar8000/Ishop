@@ -1,4 +1,4 @@
-// File: D:\Ws Cube Tech Project\Full Stack Project\IShop\frontend\src\app\layout.jsx
+// File: C:\Users\lokesh kumar\OneDrive\Desktop\ishops\Ishop\frontend\src\app\layout.jsx
 import * as entry from '../../../src/app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

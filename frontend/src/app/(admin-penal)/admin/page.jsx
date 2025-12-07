@@ -1,8 +1,9 @@
 "use client";
-import { axioIsnstance, formatIndianCurrency } from "@/library/helper";
+import { axioIsnstance, formatIndianCurrency, notify } from "@/library/helper";
 import React, { useEffect, useRef, useState } from "react";
 
 export default function ContentPage() {
+
   const [orders, setOrders] = useState([]);
   const inputRef = useRef();
   const [search, setSearch] = useState("");
@@ -50,6 +51,21 @@ export default function ContentPage() {
       });
   }, []);
 
+ 
+
+     function removeHandlar(userId, orderId) {
+    axioIsnstance
+      .delete(`order/remove-oder/${userId}/${orderId}`)
+      .then((response) => {
+        window.location.reload();
+        notify(response.data.message, response.data.success);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+
   function getInput(e) {
     e.preventDefault();
     setSearch(inputRef.current.value);
@@ -86,7 +102,7 @@ export default function ContentPage() {
         <form onSubmit={getInput} className=" w-full flex gap-1 sm:gap-10 ">
           <input
             type="text"
-            placeholder=" Search order Order Id...."
+            placeholder=" Search order in Order Id...."
             className=" border py-2 px-3 flex-1 "
             ref={inputRef}
           />
@@ -110,22 +126,13 @@ export default function ContentPage() {
               <th className="p-3">Customer</th>
               <th className="p-3">Amount</th>
               <th className="p-3">Status</th>
+              <th className="p-3">Remove</th>
             </tr>
           </thead>
           <tbody>
             {orders?.map((order, index) => (
               <tr key={index} className="border-b hover:bg-gray-50">
                 <td className="p-3">{order._id}</td>
-
-                {/* Product Image + Name */}
-                {/* <td className="p-3 flex items-center gap-3">
-                  <img
-                    src={order.productImg}
-                    alt={order.product}
-                    className="w-10 h-10 rounded-md object-cover"
-                  />
-                  <span>{order.product}</span>
-                </td> */}
 
                 {/* Customer Name */}
                 <td className="p-3">{order?.user_id?.name}</td>
@@ -150,6 +157,12 @@ export default function ContentPage() {
                     : order.order_status === 1
                     ? "pandding"
                     : "Cancelled"}
+                </td>
+                <td
+                  onClick={() => removeHandlar(order.user_id._id, order._id)}
+                  className="p-3 font-bold cursor-pointer text-red-500 "
+                >
+                  Delete
                 </td>
               </tr>
             ))}

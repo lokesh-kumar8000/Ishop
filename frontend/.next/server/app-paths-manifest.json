@@ -1,7 +1,8 @@
 {
-  "/(admin-penal)/admin/category/page": "app/(admin-penal)/admin/category/page.js",
-  "/(website)/thank-you/[orderId]/page": "app/(website)/thank-you/[orderId]/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/(website)/page": "app/(website)/page.js",
-  "/(admin-penal)/admin/product/page": "app/(admin-penal)/admin/product/page.js",
-  "/(admin-penal)/admin/product/edit/[edit_id]/page": "app/(admin-penal)/admin/product/edit/[edit_id]/page.js"
+  "/(admin-penal)/admin/page": "app/(admin-penal)/admin/page.js",
+  "/(admin-penal)/admin/category/page": "app/(admin-penal)/admin/category/page.js",
+  "/(website)/store/page": "app/(website)/store/page.js",
+  "/(website)/store/[category_slug]/page": "app/(website)/store/[category_slug]/page.js"
 }
