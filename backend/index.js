@@ -17,8 +17,11 @@ const server = express();
 
 server.use(
   cors({
-    origin: ["http://localhost:3000"],
-    credentials: true, 
+    origin: [
+      "http://localhost:3000",
+      "https://frontend-8jwjh4v13-lokesh-kumars-projects-50a2d94e.vercel.app/",
+    ],
+    credentials: true,
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
@@ -29,13 +32,13 @@ server.use(express.json());
 server.use("/category", categoryRouter);
 server.use("/color", colorRouter);
 server.use("/brand", brandRouter);
-server.use("/product", productRouter); 
-server.use("/admin", adminRouter); 
-server.use("/user", userRouter); 
-server.use("/cart", cartRouter); 
-server.use("/order", orderRouter); 
-server.use("/contact", contactRouter); 
-server.use(express.static("./public")); 
+server.use("/product", productRouter);
+server.use("/admin", adminRouter);
+server.use("/user", userRouter);
+server.use("/cart", cartRouter);
+server.use("/order", orderRouter);
+server.use("/contact", contactRouter);
+server.use(express.static("./public"));
 
 server.listen(process.env.PORT, () => {
   console.log("server Runing PORT 5000  ");
