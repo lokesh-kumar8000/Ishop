@@ -19,7 +19,7 @@ server.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://frontend-8jwjh4v13-lokesh-kumars-projects-50a2d94e.vercel.app/",
+      "https://frontend-8jwjh4v13-lokesh-kumars-projects-50a2d94e.vercel.app",
     ],
     credentials: true,
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
