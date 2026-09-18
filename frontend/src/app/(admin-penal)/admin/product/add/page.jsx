@@ -7,7 +7,7 @@ import React from 'react'
   const brandJSON = await getBrand(); 
   const colorsJSON = await getcolor(); 
   return (
-    <ProductAdd category={categoryJSON.data} brand = {brandJSON.data} color = {colorsJSON.data}  />
+    <ProductAdd category={categoryJSON?.data} brand = {brandJSON?.data} color = {colorsJSON?.data}  />
   )
 }
 
